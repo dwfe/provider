@@ -1,0 +1,47 @@
+{
+  "name": "@do-while-for-each/provider",
+  "description": "Instances provider and not only",
+  "version": "1.0.0",
+  "main": "dist/cjs/index.js",
+  "types": "dist/types/index.d.ts",
+  "homepage": "https://github.com/dwfe/provider",
+  "bugs": "https://github.com/dwfe/provider/issues",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dwfe/provider.git"
+  },
+  "keywords": [
+    "dependency injection",
+    "dependency inversion",
+    "di",
+    "instances container"
+  ],
+  "author": "Do|While|For|Each",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "dwfeFs cleanDir . --noConfirm --fileNames=\"dist;node_modules;package-lock.json\"",
+    "build": "dwfeFs rmForce dist --noConfirm && tsc -b src/tsconfig.json",
+    "types": "tsc -b config/tsconfig.types.json",
+    "test": "jest --config=src/__tests__/jest.config.js",
+    "version": "npm run build && npm run types && npm run test",
+    "postversion": "git push",
+    "deploy": "npm version patch && npm publish"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "devDependencies": {
+    "@do-while-for-each/tsconfig": "^1.0.3",
+    "@types/jest": "27.x.x",
+    "jest": "27.x.x",
+    "ts-jest": "27.x.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
