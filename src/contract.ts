@@ -1,13 +1,9 @@
 import {Type} from '@do-while-for-each/common';
 
-type TProvider = Type<any> | ClassProvider | ConstructorProvider;
+export type TProvider = ICommonProvider;
 
-export interface ClassProvider {
+export interface ICommonProvider {
   provide: any;
-  useClass: Type<any>;
-}
-
-export interface ConstructorProvider {
-  provide: Type<any>;
+  useClass?: Type<any>;
   deps?: any[];
 }
