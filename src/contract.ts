@@ -1,6 +1,6 @@
 import {Type} from '@do-while-for-each/common';
 
-type TProvider = Type<any>|ClassProvider|ConstructorProvider;
+type TProvider = Type<any> | ClassProvider | ConstructorProvider;
 
 export interface ClassProvider {
   provide: any;
