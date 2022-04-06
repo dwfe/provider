@@ -11,10 +11,10 @@
     "url": "git@github.com:dwfe/provider.git"
   },
   "keywords": [
+    "instances container",
     "dependency injection",
     "dependency inversion",
-    "di",
-    "instances container"
+    "di"
   ],
   "author": "Do|While|For|Each",
   "license": "MIT",
