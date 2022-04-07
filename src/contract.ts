@@ -6,6 +6,7 @@ export interface ICommonEntry {
   provide: any;
   useClass?: Type<any>;
   deps?: any[];
+  useValue?: any;
 }
 
 class Duck {
@@ -18,7 +19,22 @@ class Turkey {
   }
 }
 
-// 1) Add Entry
+/**
+ * ADD ENTRY
+ *  .)
+ *
+ * RESOLVE
+ *  .) если useValue, то просто его вернуть, иначе
+ *
+ *  Резолв инстанса класса.
+ *   1) определить список параметров конструктора
+ *     - из deps
+ *     - из Reflect.hasOwnMetadata("design:paramtypes", constructor) -> Reflect.getOwnMetadata
+ *   2) заполнить параметры конструктора
+ *     - для deps просто передать в конструктор
+ *     - иначе каждый из параметров сначала надо зарезолвить
+ *
+ */
 
 new Map<TProvider, any[]>([
   [{provide: Duck, useClass: Duck}, []],
