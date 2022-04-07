@@ -13,11 +13,17 @@ class Duck {
   }
 }
 
+class Turkey {
+  constructor(public message?: string) {
+  }
+}
+
+// 1) Add Entry
+
 new Map<TProvider, any[]>([
-  [
-    {provide: Duck, useClass: Duck}, []
-  ],
-  [
-    {provide: Duck, deps: ['quack!']}, []
-  ]
+  [{provide: Duck, useClass: Duck}, []],
+  [{provide: Duck, useClass: Turkey}, []],
+
+  [{provide: Duck, deps: ['quack!']}, []],
+  [{provide: Duck, useClass: Turkey, deps: ['ololo!']}, []],
 ])
