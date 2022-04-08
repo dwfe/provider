@@ -1,5 +1,5 @@
-import {normalizeEntry} from './util';
-import {TEntry} from './contract'
+import {normalizeEntry} from '../util';
+import {TEntry} from '../contract'
 import {isEqual} from '@do-while-for-each/common';
 
 export class Registry {
