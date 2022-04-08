@@ -1,34 +1,50 @@
 import {Type} from '@do-while-for-each/common';
 
-export type TProvider = ICommonEntry;
+export type TEntry = ICommonEntry;
 
 export interface ICommonEntry {
   provide: any;
   useClass?: Type<any>;
   deps?: any[];
   useValue?: any;
+  multi?: boolean;
 }
 
-class Duck {
-  constructor(public message?: string) {
+interface IBird {
+  sound(): string;
+}
+
+class Duck implements IBird {
+  constructor(public message = 'quack!') {
+  }
+
+  sound() {
+    return this.message;
   }
 }
 
-class Turkey {
-  constructor(public message?: string) {
+class Turkey implements IBird {
+  constructor(public message = 'ololo!') {
+  }
+
+  sound() {
+    return this.message;
   }
 }
 
 /**
+ * ==========
+ *
  * ADD ENTRY
- *  .)
+ *  .) если (isClass(provide) И !deps И !useClass) тогда useClass = provide
+ *
+ * ==========
  *
  * RESOLVE
  *  .) если useValue, то просто его вернуть, иначе
  *
  *  Резолв инстанса класса.
  *    - если useClass это класс
- *    - если отсутствует useClass и provide это класс
  *
  *   1) определить список параметров конструктора
  *     - из deps
@@ -39,12 +55,24 @@ class Turkey {
  *
  *  Резолв токена.
  *
+ *  ==========
+ *
  */
 
-new Map<TProvider, any[]>([
+[
   [{provide: Duck, useClass: Duck}, []],
   [{provide: Duck, useClass: Turkey}, []],
 
-  [{provide: Duck, deps: ['quack!']}, []],
+  [{provide: Duck, useClass: Duck, deps: ['quack!']}, []],
   [{provide: Duck, useClass: Turkey, deps: ['ololo!']}, []],
+]
+
+
+new Map<any, TEntry[]>([
+  [Duck, [{provide: Duck, useClass: Duck}]],
+  [Turkey, [{provide: Turkey, useClass: Duck, deps: ['ololo!']}]],
+  ['IBird', [
+    {provide: 'IBird', useClass: Duck, multi: true},
+    {provide: 'IBird', useClass: Turkey, multi: true},
+  ]],
 ])
