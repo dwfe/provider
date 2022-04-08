@@ -1,21 +1,15 @@
-import {normalizeEntry} from '../util';
-import {TEntry} from '../contract'
-import {isEqual} from '@do-while-for-each/common';
+import {Entry} from './entry'
 
 export class Registry {
 
-  private map = new Map<any, TEntry[]>();
+  private map = new Map<any, Entry[]>();
 
-  set(entry: TEntry): void {
-    entry = normalizeEntry(entry);
-    this.addToMap(entry);
+  get<T>(provide: T): Entry[] | undefined {
+    const entries = this.map.get(provide);
+    return Array.isArray(entries) ? [...entries] : undefined;
   }
 
-  get<T>(provide: T): TEntry[] | undefined {
-    return this.map.get(provide);
-  }
-
-  private addToMap(entry: TEntry) {
+  set(entry: Entry): void {
     const {provide, multi} = entry;
     const existedEntries = this.get(provide);
     if (!existedEntries) {
@@ -23,10 +17,22 @@ export class Registry {
       return;
     }
     if (multi) {
-      existedEntries.some(x => isEqual(x, entry))
+      const isWrongMulti = existedEntries.some(x => !x.multi);
+      if (isWrongMulti) {
+        console.error(`In existing records there is an entry with flag "multi" set to false. Existed entries:`, existedEntries.map(x => x.toSimple()));
+        throw new Error(`All existing records should have flag "multi" set to true`);
+      }
+      const isExistedEntry = existedEntries.some(x => x.equals(entry));
+      if (isExistedEntry) {
+        console.warn(`Attempt to add a duplicate to the registry. New entry:`, entry.toSimple());
+      } else {
+        existedEntries.push(entry);
+        this.map.set(provide, existedEntries);
+      }
+    } else {
+      console.error(`The registry contains several entries, but the new entry goes without the "multi" flag. New entry:`, entry.toSimple());
+      throw new Error(`"multi" flag must be set to true`);
     }
-
   }
-
 
 }
