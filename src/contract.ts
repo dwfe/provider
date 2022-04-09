@@ -1,14 +1,4 @@
-import {Type} from '@do-while-for-each/common';
-
-export type TEntry = ICommonEntry;
-
-export interface ICommonEntry {
-  provide: any;
-  useClass?: Type<any>;
-  deps?: any[];
-  useValue?: any;
-  multi?: boolean;
-}
+import {IEntry} from './registry'
 
 interface IBird {
   sound(): string;
@@ -59,16 +49,17 @@ class Turkey implements IBird {
  *
  */
 
-[
-  [{provide: Duck, useClass: Duck}, []],
-  [{provide: Duck, useClass: Turkey}, []],
 
-  [{provide: Duck, useClass: Duck, deps: ['quack!']}, []],
-  [{provide: Duck, useClass: Turkey, deps: ['ololo!']}, []],
-]
+// [
+//   [{provide: Duck, useClass: Duck}, []],
+//   [{provide: Duck, useClass: Turkey}, []],
+//
+//   [{provide: Duck, useClass: Duck, deps: ['quack!']}, []],
+//   [{provide: Duck, useClass: Turkey, deps: ['ololo!']}, []],
+// ]
+//
 
-
-new Map<any, TEntry[]>([
+new Map<any, IEntry[]>([
   [Duck, [{provide: Duck, useClass: Duck}]],
   [Turkey, [{provide: Turkey, useClass: Duck, deps: ['ololo!']}]],
   ['IBird', [
