@@ -1,7 +1,7 @@
 import {describe, expect} from '@jest/globals';
 import * as console2 from 'console';
 import {IEntryTest} from '../abc/contract'
-import {Duck} from '../abc/bird'
+import {Duck, Turkey} from '../abc/bird'
 import {Entry, IEntry} from '../../registry'
 import {ifArraysCheckEqual} from '../../registry/util'
 
@@ -31,9 +31,9 @@ describe(`tests`, () => {
     check(
       {provide: Duck, useClass: Duck, deps: ['quack!', Map]},
       {provide: Duck, useClass: Duck, deps: ['quack!', Map], useValue: undefined, multi: false, isValueProvided: false, isClassProvided: true});
-    // check(
-    //   {provide: },
-    //   {provide: , useClass: , deps: , useValue: , multi: , isValueProvided: , isClassProvided: });
+    check(
+      {provide: Duck, useClass: Turkey, deps: ['ololo!']},
+      {provide: Duck, useClass: Turkey, deps: ['ololo!'], useValue: undefined, multi: false, isValueProvided: false, isClassProvided: true});
 
     // check(
     //   {provide: },
