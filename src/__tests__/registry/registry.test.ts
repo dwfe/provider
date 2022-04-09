@@ -1,4 +1,4 @@
-import {describe, expect} from '@jest/globals';
+import {describe} from '@jest/globals';
 import * as console2 from 'console';
 
 global.console = console2;

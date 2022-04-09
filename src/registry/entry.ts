@@ -1,5 +1,5 @@
 import {Type} from '@do-while-for-each/common'
-import {arraysEqual} from './util'
+import {ifArraysCheckEqual} from './util'
 import {IEntry} from './contract'
 
 export class Entry<T = any> implements IEntry {
@@ -9,8 +9,8 @@ export class Entry<T = any> implements IEntry {
   readonly useValue?: any; // undefined | any
   readonly multi: boolean; // false | true
 
-  readonly isClassProvided: boolean;
   readonly isValueProvided: boolean;
+  readonly isClassProvided: boolean;
 
   constructor(entry: IEntry) {
     /**
@@ -63,15 +63,8 @@ export class Entry<T = any> implements IEntry {
       return false;
     if (this.useClass !== useClass)
       return false;
-
-    const aIsArr = Array.isArray(this.deps);
-    const bIsArr = Array.isArray(deps);
-    if (aIsArr && bIsArr) {
-      if (!arraysEqual(this.deps as any[], deps))
-        return false;
-    } else if (aIsArr || bIsArr)
+    if (!ifArraysCheckEqual(this.deps, deps))
       return false;
-
     if (this.useValue !== useValue)
       return false;
     return this.multi === multi;
