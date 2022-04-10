@@ -23,7 +23,7 @@ RESOLVE
 
 ==========
 
-Normal use:
+Normal use examples:
  {provide: Duck, useClass: Duck}
  {provide: Duck, useClass: Duck, deps: ['quack!']}
  {provide: Turkey, useClass: Duck, deps: ['ololo!']}
@@ -32,6 +32,7 @@ Normal use:
  {provide: "Bird", useClass: Duck, multi: true}
  {provide: "Bird", useClass: Turkey, multi: true}
  {provide: "Bird", useValue: 'Eagle', multi: true}
+ {provide: "lang", useFactory: (user: User) => user?.lang || 'en', deps: [User]}
 
 
 

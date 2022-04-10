@@ -4,35 +4,54 @@ import {IEntry} from './contract'
 
 export class Entry<T = any> implements IEntry {
   readonly provide: T;  // !!any
-  readonly useClass?: Type<any>; // constructor
+  readonly useClass?: Type<any>;  // undefined || constructor
+  readonly useFactory?: Function; // undefined || function
   readonly deps?: any[]; // undefined | any[]
   readonly useValue?: any; // undefined | any
   readonly multi: boolean; // false | true
 
   readonly isValueProvided: boolean;
-  readonly isClassProvided: boolean;
+  readonly isClassInstanceProvided: boolean;
+  readonly isFactoryResultProvided: boolean;
 
   constructor(entry: IEntry) {
     this.isValueProvided = false;
-    this.isClassProvided = false;
+    this.isClassInstanceProvided = false;
+    this.isFactoryResultProvided = false;
     /**
      * Normalization
      */
-    const {provide, useClass, deps, useValue, multi} = entry;
+    const {provide, useClass, useFactory, deps, useValue, multi} = entry;
     if (!provide) {
       console.error(`Incorrect provide:`, entry)
       throw new Error('');
     }
     this.provide = provide;
     if (useValue === undefined) {
-      this.isClassProvided = true;
-      if (useClass === null || !!useClass && typeof useClass !== 'function') {
-        console.error(`Incorrect useClass:`, entry);
+      if (!!useClass && !!useFactory) {
+        console.error(`At the same time, you can set either only useClass or only useFactory`, entry);
         throw new Error('');
       }
-      this.useClass = useClass;
-      if (this.useClass === undefined && isFunction(this.provide))
-        this.useClass = this.provide as unknown as Type<any>;
+      if (useClass || !useFactory) {
+        if (!!useClass && typeof useClass !== 'function') {
+          console.error(`Incorrect useClass:`, entry);
+          throw new Error('');
+        }
+        this.useClass = useClass;
+        if (!this.useClass && isFunction(this.provide))
+          this.useClass = this.provide as unknown as Type<any>;
+        this.isClassInstanceProvided = true;
+      } else if (useFactory) {
+        if (typeof useFactory !== 'function') {
+          console.error(`Incorrect useFactory:`, entry);
+          throw new Error('');
+        }
+        this.useFactory = useFactory;
+        this.isFactoryResultProvided = true;
+      } else {
+        console.error(`If useValue is unset, then useClass or useFactory must be set`, entry);
+        throw new Error('');
+      }
       if (deps === null || !!deps && !Array.isArray(deps)) {
         console.error(`Incorrect deps:`, entry);
         throw new Error('');
