@@ -48,9 +48,6 @@ export class Entry<T = any> implements IEntry {
         }
         this.useFactory = useFactory;
         this.isFactoryResultProvided = true;
-      } else {
-        console.error(`If useValue is unset, then useClass or useFactory must be set`, entry);
-        throw new Error('');
       }
       if (deps === null || !!deps && !Array.isArray(deps)) {
         console.error(`Incorrect deps:`, entry);

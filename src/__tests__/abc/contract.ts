@@ -1,7 +1,7 @@
 export interface IEntryTest {
   provide?: any;
   useClass?: any;
-  useFactory?: Function;
+  useFactory?: any;
   deps?: any;
   useValue?: any;
   multi?: any;
