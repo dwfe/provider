@@ -22,25 +22,3 @@ RESOLVE
 Резолв токена.
 
 ==========
-
-Normal use examples:
- {provide: Duck, useClass: Duck}
- {provide: Duck, useClass: Duck, deps: ['quack!']}
- {provide: Turkey, useClass: Duck, deps: ['ololo!']}
- {provide: Duck, useValue: 123}
- {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123}
- {provide: "Bird", useClass: Duck, multi: true}
- {provide: "Bird", useClass: Turkey, multi: true}
- {provide: "Bird", useValue: 'Eagle', multi: true}
- {provide: "lang", useFactory: (user: User) => user?.lang || 'en', deps: [User]}
-
-
-
-new Map<any, IEntry[]>([
-  [Duck, [{provide: Duck, useClass: Duck}]],
-  [Turkey, [{provide: Turkey, useClass: Duck, deps: ['ololo!']}]],
-  ['IBird', [
-    {provide: 'IBird', useClass: Duck, multi: true},
-    {provide: 'IBird', useClass: Turkey, multi: true},
-  ]],
-])

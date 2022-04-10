@@ -20,10 +20,9 @@ function check(dto: IEntry, test: IEntryTest) {
 
 const getLang = (user: User) => user?.lang || 'en';
 
-describe(`tests`, () => {
+describe(`normal use`, () => {
 
-  test(`normal use`, () => {
-
+  test(`Class instance provided`, () => {
     check(
       {provide: Duck},
       {provide: Duck, useClass: Duck, useFactory: undefined, deps: undefined, useValue: undefined, multi: false, isValueProvided: false, isClassInstanceProvided: true, isFactoryResultProvided: false});
@@ -36,28 +35,39 @@ describe(`tests`, () => {
     check(
       {provide: Turkey, useClass: Duck, deps: ['ololo!']},
       {provide: Turkey, useClass: Duck, useFactory: undefined, deps: ['ololo!'], useValue: undefined, multi: false, isValueProvided: false, isClassInstanceProvided: true, isFactoryResultProvided: false});
+  });
+
+  test(`Factory result provided`, () => {
+    check(
+      {provide: 'lang', useFactory: getLang, deps: [User]},
+      {provide: 'lang', useClass: undefined, useFactory: getLang, deps: [User], useValue: undefined, multi: false, isValueProvided: false, isClassInstanceProvided: false, isFactoryResultProvided: true});
+  });
+
+  test(`Value provided`, () => {
     check(
       {provide: Duck, useValue: 123},
       {provide: Duck, useClass: undefined, useFactory: undefined, deps: undefined, useValue: 123, multi: false, isValueProvided: true, isClassInstanceProvided: false, isFactoryResultProvided: false});
     check(
       {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123},
       {provide: Turkey, useClass: undefined, useFactory: undefined, deps: undefined, useValue: 123, multi: false, isValueProvided: true, isClassInstanceProvided: false, isFactoryResultProvided: false});
+  });
+
+  test(`Multiple provided`, () => {
     check(
       {provide: 'Bird', useClass: Duck, multi: true},
       {provide: 'Bird', useClass: Duck, useFactory: undefined, deps: undefined, useValue: undefined, multi: true, isValueProvided: false, isClassInstanceProvided: true, isFactoryResultProvided: false});
     check(
+      {provide: 'Bird', useClass: Turkey, multi: true},
+      {provide: 'Bird', useClass: Turkey, useFactory: undefined, deps: undefined, useValue: undefined, multi: true, isValueProvided: false, isClassInstanceProvided: true, isFactoryResultProvided: false});
+    check(
       {provide: 'Bird', useValue: 'Eagle', multi: true},
       {provide: 'Bird', useClass: undefined, useFactory: undefined, deps: undefined, useValue: 'Eagle', multi: true, isValueProvided: true, isClassInstanceProvided: false, isFactoryResultProvided: false});
-    check(
-      {provide: 'lang', useFactory: getLang, deps: [User]},
-      {provide: 'lang', useClass: undefined, useFactory: getLang, deps: [User], useValue: undefined, multi: false, isValueProvided: false, isClassInstanceProvided: false, isFactoryResultProvided: true});
-
-    // check(
-    //   {provide: },
-    //   {provide: , useClass: , useFactory: , deps: , useValue: , multi: , isValueProvided: , isClassInstanceProvided: , isFactoryResultProvided: });
-
   });
 
   // test(``, () => {});
+
+  // check(
+  //   {provide: },
+  //   {provide: , useClass: , useFactory: , deps: , useValue: , multi: , isValueProvided: , isClassInstanceProvided: , isFactoryResultProvided: });
 
 });

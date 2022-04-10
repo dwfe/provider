@@ -19,7 +19,7 @@ export class Entry<T = any> implements IEntry {
     this.isClassInstanceProvided = false;
     this.isFactoryResultProvided = false;
     /**
-     * Normalization
+     * Validation & Normalization
      */
     const {provide, useClass, useFactory, deps, useValue, multi} = entry;
     if (!provide) {
