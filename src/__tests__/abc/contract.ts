@@ -5,7 +5,5 @@ export interface IEntryTest {
   deps?: any;
   useValue?: any;
   multi?: any;
-  isValueProvided?: any;
-  isClassInstanceProvided?: any;
-  isFactoryResultProvided?: any;
+  resultType?: any;
 }

@@ -17,14 +17,9 @@ export class Registry {
       return;
     }
     if (multi) {
-      const isWrongMulti = existedEntries.some(x => !x.multi);
-      if (isWrongMulti) {
-        console.error(`In existing entries there is an entry with flag "multi" set to false. Existed entries:`, existedEntries.map(x => x.toSimple()));
-        throw new Error(`All existing entries must have flag "multi" set to true`);
-      }
       const isDuplicate = existedEntries.some(x => x.equals(entry));
       if (isDuplicate) {
-        console.warn(`Skipped attempt to add a duplicate to the registry. New entry:`, entry.toSimple(), `Existed entries:`, existedEntries.map(x => x.toSimple()));
+        console.warn(`Prevented an attempt to add a duplicate to the registry. New entry:`, entry.toSimple(), `Existed entries:`, existedEntries.map(x => x.toSimple()));
         return;
       }
       existedEntries.push(entry);

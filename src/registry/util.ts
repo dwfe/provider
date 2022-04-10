@@ -1,4 +1,4 @@
-export function ifArraysCheckEqual(a: any, b: any): boolean {
+export function ifArraysEqual(a: any, b: any): boolean {
   const aIsArr = Array.isArray(a);
   const bIsArr = Array.isArray(b);
   if (aIsArr && bIsArr)

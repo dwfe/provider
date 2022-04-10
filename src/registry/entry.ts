@@ -1,5 +1,5 @@
 import {Type} from '@do-while-for-each/common'
-import {ifArraysCheckEqual, isFunction} from './util'
+import {ifArraysEqual, isFunction} from './util'
 import {IEntry} from './contract'
 
 export class Entry<T = any> implements IEntry {
@@ -10,14 +10,9 @@ export class Entry<T = any> implements IEntry {
   readonly useValue?: any; // undefined | any
   readonly multi: boolean; // false | true
 
-  readonly isValueProvided: boolean;
-  readonly isClassInstanceProvided: boolean;
-  readonly isFactoryResultProvided: boolean;
+  readonly resultType!: 'value' | 'instance' | 'factory-result';
 
   constructor(entry: IEntry) {
-    this.isValueProvided = false;
-    this.isClassInstanceProvided = false;
-    this.isFactoryResultProvided = false;
     /**
      * Validation & Normalization
      */
@@ -40,14 +35,14 @@ export class Entry<T = any> implements IEntry {
         this.useClass = useClass;
         if (!this.useClass && isFunction(this.provide))
           this.useClass = this.provide as unknown as Type<any>;
-        this.isClassInstanceProvided = true;
+        this.resultType = 'instance';
       } else if (useFactory) {
         if (typeof useFactory !== 'function') {
           console.error(`Incorrect useFactory:`, entry);
           throw new Error('');
         }
         this.useFactory = useFactory;
-        this.isFactoryResultProvided = true;
+        this.resultType = 'factory-result';
       }
       if (deps === null || !!deps && !Array.isArray(deps)) {
         console.error(`Incorrect deps:`, entry);
@@ -56,9 +51,13 @@ export class Entry<T = any> implements IEntry {
       this.deps = deps;
     } else {
       this.useValue = useValue;
-      this.isValueProvided = true;
+      this.resultType = 'value';
     }
     this.multi = !!multi || false;
+    if (!this.resultType) {
+      console.error(`The result type is undefined`, entry)
+      throw new Error('');
+    }
   }
 
   equals({provide, useClass, deps, useValue, multi}: Entry): boolean {
@@ -66,7 +65,7 @@ export class Entry<T = any> implements IEntry {
       return false;
     if (this.useClass !== useClass)
       return false;
-    if (!ifArraysCheckEqual(this.deps, deps))
+    if (!ifArraysEqual(this.deps, deps))
       return false;
     if (this.useValue !== useValue)
       return false;
