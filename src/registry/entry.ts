@@ -1,5 +1,5 @@
 import {Type} from '@do-while-for-each/common'
-import {ifArraysCheckEqual} from './util'
+import {ifArraysCheckEqual, isFunction} from './util'
 import {IEntry} from './contract'
 
 export class Entry<T = any> implements IEntry {
@@ -13,6 +13,8 @@ export class Entry<T = any> implements IEntry {
   readonly isClassProvided: boolean;
 
   constructor(entry: IEntry) {
+    this.isValueProvided = false;
+    this.isClassProvided = false;
     /**
      * Normalization
      */
@@ -22,40 +24,25 @@ export class Entry<T = any> implements IEntry {
       throw new Error('');
     }
     this.provide = provide;
-    if (useClass === null || !!useClass && typeof useClass !== 'function') {
-      console.error(`Incorrect useClass:`, entry);
-      throw new Error('');
-    }
-    this.useClass = useClass;
-    if (deps === null || !!deps && !Array.isArray(deps)) {
-      console.error(`Incorrect deps:`, entry);
-      throw new Error('');
-    }
-    this.deps = deps;
-    this.useValue = useValue;
-    this.multi = !!multi || false;
-
-    /**
-     * What is provided?
-     */
-    if (this.useValue === undefined) {
-      if (typeof this.provide === 'function') {
-        this.isValueProvided = false;
-        this.isClassProvided = true;
-      } else {
-        console.error(`Need to determine what is being provided:`, entry)
+    if (useValue === undefined) {
+      this.isClassProvided = true;
+      if (useClass === null || !!useClass && typeof useClass !== 'function') {
+        console.error(`Incorrect useClass:`, entry);
         throw new Error('');
       }
+      this.useClass = useClass;
+      if (this.useClass === undefined && isFunction(this.provide))
+        this.useClass = this.provide as unknown as Type<any>;
+      if (deps === null || !!deps && !Array.isArray(deps)) {
+        console.error(`Incorrect deps:`, entry);
+        throw new Error('');
+      }
+      this.deps = deps;
     } else {
+      this.useValue = useValue;
       this.isValueProvided = true;
-      this.isClassProvided = false;
     }
-
-    /**
-     * Normalization
-     */
-    if (!this.useClass && this.isClassProvided)
-      this.useClass = this.provide as unknown as Type<any>;
+    this.multi = !!multi || false;
   }
 
   equals({provide, useClass, deps, useValue, multi}: Entry): boolean {

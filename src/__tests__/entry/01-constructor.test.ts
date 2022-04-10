@@ -1,11 +1,8 @@
 import {describe, expect} from '@jest/globals';
-import * as console2 from 'console';
+import {ifArraysCheckEqual} from '../../registry/util'
+import {Entry, IEntry} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
-import {Entry, IEntry} from '../../registry'
-import {ifArraysCheckEqual} from '../../registry/util'
-
-global.console = console2;
 
 function check(dto: IEntry, test: IEntryTest) {
   const entry = new Entry(dto);
@@ -20,7 +17,7 @@ function check(dto: IEntry, test: IEntryTest) {
 
 describe(`tests`, () => {
 
-  test(`обычное использование`, () => {
+  test(`normal use`, () => {
 
     check(
       {provide: Duck},
@@ -32,8 +29,20 @@ describe(`tests`, () => {
       {provide: Duck, useClass: Duck, deps: ['quack!', Map]},
       {provide: Duck, useClass: Duck, deps: ['quack!', Map], useValue: undefined, multi: false, isValueProvided: false, isClassProvided: true});
     check(
-      {provide: Duck, useClass: Turkey, deps: ['ololo!']},
-      {provide: Duck, useClass: Turkey, deps: ['ololo!'], useValue: undefined, multi: false, isValueProvided: false, isClassProvided: true});
+      {provide: Turkey, useClass: Duck, deps: ['ololo!']},
+      {provide: Turkey, useClass: Duck, deps: ['ololo!'], useValue: undefined, multi: false, isValueProvided: false, isClassProvided: true});
+    check(
+      {provide: Duck, useValue: 123},
+      {provide: Duck, useClass: undefined, deps: undefined, useValue: 123, multi: false, isValueProvided: true, isClassProvided: false});
+    check(
+      {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123},
+      {provide: Turkey, useClass: undefined, deps: undefined, useValue: 123, multi: false, isValueProvided: true, isClassProvided: false});
+    check(
+      {provide: 'Bird', useClass: Duck, multi: true},
+      {provide: 'Bird', useClass: Duck, deps: undefined, useValue: undefined, multi: true, isValueProvided: false, isClassProvided: true});
+    check(
+      {provide: 'Bird', useValue: 'Eagle', multi: true},
+      {provide: 'Bird', useClass: undefined, deps: undefined, useValue: 'Eagle', multi: true, isValueProvided: true, isClassProvided: false});
 
     // check(
     //   {provide: },
