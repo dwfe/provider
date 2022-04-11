@@ -2,8 +2,8 @@ import {isPrimitive, Type} from '@do-while-for-each/common'
 import {ifArraysEqual, isFunction} from './util'
 import {IEntry} from './contract'
 
-export class Entry<T = any> implements IEntry {
-  readonly provide: T;  // !!any
+export class Entry<TProvide = any> implements IEntry {
+  readonly provide: TProvide;  // !!any
   readonly useClass?: Type<any>;  // undefined || constructor
   readonly useFactory?: Function; // undefined || function
   readonly deps?: any[]; // undefined | any[]
@@ -81,7 +81,7 @@ export class Entry<T = any> implements IEntry {
     return this.multi === multi;
   }
 
-  get base(): IEntry<T> {
+  get base(): IEntry<TProvide> {
     const {provide, useClass, useFactory, deps, useValue, multi} = this;
     const result: IEntry = {provide};
     if (useClass !== undefined)

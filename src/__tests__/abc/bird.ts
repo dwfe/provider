@@ -3,14 +3,18 @@ export interface IBird {
 }
 
 export class Duck implements IBird {
-  constructor(public message = 'quack!') {}
+  constructor(public message = 'quack!') {
+  }
+
   sound() {
     return this.message;
   }
 }
 
 export class Turkey implements IBird {
-  constructor(public message = 'ololo!') {}
+  constructor(public message = 'ololo!') {
+  }
+
   sound() {
     return this.message;
   }
