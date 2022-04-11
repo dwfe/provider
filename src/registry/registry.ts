@@ -4,6 +4,10 @@ export class Registry {
 
   private map = new Map<any, Entry[]>();
 
+  has<T>(provide: T): boolean {
+    return this.map.has(provide);
+  }
+
   get<T>(provide: T): Entry[] | undefined {
     const entries = this.map.get(provide);
     return Array.isArray(entries) ? [...entries] : undefined;

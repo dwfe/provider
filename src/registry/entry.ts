@@ -1,4 +1,4 @@
-import {Type} from '@do-while-for-each/common'
+import {isPrimitive, Type} from '@do-while-for-each/common'
 import {ifArraysEqual, isFunction} from './util'
 import {IEntry} from './contract'
 
@@ -17,20 +17,27 @@ export class Entry<T = any> implements IEntry {
      * Normalization & Validation
      */
     const {provide, useClass, useFactory, deps, useValue, multi} = entry;
-    if (!provide) {
-      console.error(`Incorrect provide:`, entry)
-      throw new Error('');
+    if (provide == null) { // undefined, null
+      console.error(`Incorrect provide:`, entry);
+      throw new Error('Empty provide');
+    }
+    if (isPrimitive(provide)
+      && useClass === undefined
+      && useFactory === undefined
+      && useValue === undefined) {
+      console.error(`If "provide" is a primitive, then one of the following must be set: useClass, useFactory, useValue.`, entry);
+      throw new Error('Incorrect entry with primitive type of provide');
     }
     this.provide = provide;
     if (useValue === undefined) {
       if (!!useClass && !!useFactory) {
-        console.error(`At the same time, you can set either only useClass or only useFactory`, entry);
-        throw new Error('');
+        console.error(`At the same time, you can set either useClass or useFactory:`, entry);
+        throw new Error('useClass or useFactory');
       }
       if (useClass || !useFactory) {
         if (!!useClass && typeof useClass !== 'function') {
           console.error(`Incorrect useClass:`, entry);
-          throw new Error('');
+          throw new Error('Incorrect useClass');
         }
         this.useClass = useClass;
         if (!this.useClass && isFunction(this.provide))
@@ -39,14 +46,14 @@ export class Entry<T = any> implements IEntry {
       } else if (useFactory) {
         if (typeof useFactory !== 'function') {
           console.error(`Incorrect useFactory:`, entry);
-          throw new Error('');
+          throw new Error('Incorrect useFactory');
         }
         this.useFactory = useFactory;
         this.expected = 'factory-result';
       }
       if (deps === null || !!deps && !Array.isArray(deps)) {
         console.error(`Incorrect deps:`, entry);
-        throw new Error('');
+        throw new Error('Incorrect deps');
       }
       this.deps = deps;
     } else {
@@ -55,8 +62,8 @@ export class Entry<T = any> implements IEntry {
     }
     this.multi = !!multi || false;
     if (!this.expected) {
-      console.error(`The expected result is undefined`, entry)
-      throw new Error('');
+      console.error(`The expected result is undefined:`, entry);
+      throw new Error('The expected result is undefined');
     }
   }
 
