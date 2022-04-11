@@ -5,6 +5,10 @@ export class Registry {
 
   private map = new Map<any, Entry[]>();
 
+  get size(): number {
+    return this.map.size;
+  }
+
   has(provide: any): boolean {
     return this.map.has(provide);
   }
@@ -60,10 +64,6 @@ export class Registry {
         console.error(`The registry contains several "multi" entries, but the new entry goes without the "multi" flag. New entry:`, entry.base, `Existed entries:`, existedEntries.map(x => x.base));
         throw new Error(`For this "provide" flag "multi" must be set to true in new entry`);
     }
-  }
-
-  get size(): number {
-    return this.map.size;
   }
 
 }
