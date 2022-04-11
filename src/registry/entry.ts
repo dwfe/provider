@@ -10,7 +10,7 @@ export class Entry<T = any> implements IEntry {
   readonly useValue?: any; // undefined | any
   readonly multi: boolean; // false | true
 
-  readonly resultType!: 'value' | 'instance' | 'factory-result';
+  readonly expected!: 'value' | 'instance' | 'factory-result';
 
   constructor(entry: IEntry) {
     /**
@@ -35,14 +35,14 @@ export class Entry<T = any> implements IEntry {
         this.useClass = useClass;
         if (!this.useClass && isFunction(this.provide))
           this.useClass = this.provide as unknown as Type<any>;
-        this.resultType = 'instance';
+        this.expected = 'instance';
       } else if (useFactory) {
         if (typeof useFactory !== 'function') {
           console.error(`Incorrect useFactory:`, entry);
           throw new Error('');
         }
         this.useFactory = useFactory;
-        this.resultType = 'factory-result';
+        this.expected = 'factory-result';
       }
       if (deps === null || !!deps && !Array.isArray(deps)) {
         console.error(`Incorrect deps:`, entry);
@@ -51,11 +51,11 @@ export class Entry<T = any> implements IEntry {
       this.deps = deps;
     } else {
       this.useValue = useValue;
-      this.resultType = 'value';
+      this.expected = 'value';
     }
     this.multi = !!multi || false;
-    if (!this.resultType) {
-      console.error(`The result type is undefined`, entry)
+    if (!this.expected) {
+      console.error(`The expected result is undefined`, entry)
       throw new Error('');
     }
   }

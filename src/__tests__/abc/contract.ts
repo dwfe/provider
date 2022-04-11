@@ -5,5 +5,5 @@ export interface IEntryTest {
   deps?: any;
   useValue?: any;
   multi?: any;
-  resultType?: any;
+  expected?: any;
 }
