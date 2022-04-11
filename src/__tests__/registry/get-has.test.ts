@@ -1,5 +1,5 @@
 import {describe, expect} from '@jest/globals';
-import {Entry, Registry} from '../../registry';
+import {Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
 
 describe(`Registry.get .has`, () => {
@@ -15,7 +15,7 @@ describe(`Registry.get .has`, () => {
     expect(registry.has(123)).toBe(false);
     expect(registry.get(123)).toBe(undefined);
 
-    registry.set(new Entry({provide: Duck}));
+    registry.set({provide: Duck});
     expect(registry.has(Duck)).toBe(true);
     expect(registry.has(Turkey)).toBe(false);
     expect(registry.get(Turkey)).toBe(undefined);
@@ -23,18 +23,18 @@ describe(`Registry.get .has`, () => {
 
   test(`entry exists`, () => {
     const registry = new Registry();
-    registry.set(new Entry({provide: Duck}));
+    registry.set({provide: Duck});
     let result = registry.get(Duck);
     expect(Array.isArray(result) && result.length === 1).toBe(true);
 
-    registry.set(new Entry({provide: 123, useClass: Duck}));
+    registry.set({provide: 123, useClass: Duck});
     result = registry.get(123);
     expect(Array.isArray(result) && result.length === 1).toBe(true);
   });
 
   test(`clone result arr`, () => {
     const registry = new Registry();
-    registry.set(new Entry({provide: Duck}));
+    registry.set({provide: Duck});
     const result1 = registry.get(Duck);
     const result2 = registry.get(Duck);
     expect(Array.isArray(result1)).toBe(true);

@@ -28,6 +28,15 @@ describe(`Entry.equals`, () => {
     falsy(
       {provide: Duck, useClass: Duck},
       {provide: Duck, useClass: Duck, deps: ['quack!']});
+    falsy(
+      {provide: Duck, useClass: Duck, deps: ['quack!', User]},
+      {provide: Duck, useClass: Duck, deps: ['quack!']});
+    falsy(
+      {provide: Duck, useClass: Duck, deps: []},
+      {provide: Duck, useClass: Duck, deps: ['quack!']});
+    falsy(
+      {provide: Duck, useClass: Duck},
+      {provide: Duck, useClass: Duck, deps: ['quack!']});
   });
 
   test(`factory result provided`, () => {
