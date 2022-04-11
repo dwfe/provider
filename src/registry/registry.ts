@@ -24,19 +24,21 @@ export class Registry {
       }
       existedEntries.push(entry);
       this.map.set(provide, existedEntries);
-    } else {
-      if (existedEntries.length === 0) {
-        this.map.set(provide, [entry]);
-        console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.base);
-        return;
-      } else if (existedEntries.length === 1) {
-        this.map.set(provide, [entry]);
-        console.warn(`The existing entry has been replaced with:`, entry.base);
-        return;
-      }
-      console.error(`The registry contains several entries, but the new entry goes without the "multi" flag. New entry:`, entry.base, `Existed entries:`, existedEntries.map(x => x.base));
-      throw new Error(`Flag "multi" must be set to true in new entry`);
+      return;
     }
+    // for multi: false
+    switch (existedEntries.length) {
+      case 0:
+        console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.base);
+        this.map.set(provide, [entry]);
+        return;
+      case 1:
+        console.warn(`The existing entry has been replaced with:`, entry.base);
+        this.map.set(provide, [entry]);
+        return;
+    }
+    console.error(`The registry contains several entries, but the new entry goes without the "multi" flag. New entry:`, entry.base, `Existed entries:`, existedEntries.map(x => x.base));
+    throw new Error(`Flag "multi" must be set to true in new entry`);
   }
 
 }

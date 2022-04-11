@@ -74,7 +74,7 @@ export class Entry<T = any> implements IEntry {
     return this.multi === multi;
   }
 
-  get base(): IEntry {
+  get base(): IEntry<T> {
     const {provide, useClass, useFactory, deps, useValue, multi} = this;
     const result: IEntry = {provide};
     if (useClass !== undefined)
