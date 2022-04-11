@@ -60,10 +60,12 @@ export class Entry<T = any> implements IEntry {
     }
   }
 
-  equals({provide, useClass, deps, useValue, multi}: Entry): boolean {
+  equals({provide, useClass, useFactory, deps, useValue, multi}: Entry): boolean {
     if (this.provide !== provide)
       return false;
     if (this.useClass !== useClass)
+      return false;
+    if (this.useFactory !== useFactory)
       return false;
     if (!ifArraysEqual(this.deps, deps))
       return false;

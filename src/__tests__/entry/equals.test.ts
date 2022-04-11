@@ -1,35 +1,69 @@
 import {describe, expect} from '@jest/globals';
+import {getLang} from './constructor-normalization.test'
 import {Entry, IEntry} from '../../registry'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user';
 
-function okEquality(entry: IEntry) {
-  expect(new Entry(entry).equals(new Entry(entry))).toBe(true)
+function truthy(a: IEntry, b = {...a}) {
+  expect(new Entry(a).equals(new Entry(b))).toBe(true)
+}
+
+function falsy(a: IEntry, b = {...a}) {
+  expect(new Entry(a).equals(new Entry(b))).toBe(false)
 }
 
 describe(`equals`, () => {
 
   test(`class instance provided`, () => {
-    okEquality({provide: Duck});
-    okEquality({provide: Duck, useClass: Duck});
-    okEquality({provide: Duck, useClass: Duck, deps: ['quack!']});
-    okEquality({provide: Duck, useClass: Duck, deps: []});
-    okEquality({provide: Duck, useClass: Duck, deps: [null, User]});
-    okEquality({provide: Turkey, useClass: Duck, deps: ['ololo!']});
+    truthy({provide: Duck});
+    truthy({provide: Duck, useClass: Duck});
+    truthy({provide: Duck}, {provide: Duck, useClass: Duck});
+    truthy({provide: Duck, useClass: Duck, deps: ['quack!']});
+    truthy({provide: Duck, useClass: Duck, deps: []});
+    truthy({provide: Duck, useClass: Duck, deps: [null, User]});
+    truthy({provide: Turkey, useClass: Duck, deps: ['ololo!']});
+    falsy(
+      {provide: Duck},
+      {provide: Turkey});
+    falsy(
+      {provide: Duck, useClass: Duck},
+      {provide: Duck, useClass: Duck, deps: ['quack!']});
   });
 
   test(`factory result provided`, () => {
-    okEquality({provide: "lang", useFactory: (user: User) => user?.lang || 'en', deps: [User]});
+    truthy({provide: 'lang', useFactory: getLang, deps: [User]});
+    falsy(
+      {provide: 'lang', useFactory: () => true, deps: [User]},
+      {provide: 'lang', useFactory: () => true, deps: [User]}
+    )
   });
 
   test(`value provided`, () => {
-    okEquality({provide: Duck, useValue: 123});
-    okEquality({provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123});
+    truthy({provide: Duck, useValue: 123});
+    truthy({provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123});
+    falsy(
+      {provide: Duck},
+      {provide: Duck, useValue: 123});
+    falsy(
+      {provide: Duck, useValue: null},
+      {provide: Duck, useValue: 123});
+    falsy(
+      {provide: Duck, useValue: User},
+      {provide: Turkey, useValue: User});
   });
 
   test(`multiple provided`, () => {
-    okEquality({provide: "Bird", useClass: Duck, multi: true});
-    okEquality({provide: "Bird", useValue: 'Eagle', multi: true});
+    truthy({provide: 'Bird', useClass: Duck, multi: true});
+    truthy({provide: 'Bird', useValue: 'Eagle', multi: true});
+    falsy(
+      {provide: 'Bird', useClass: Duck},
+      {provide: 'Bird', useClass: Duck, multi: true});
+    falsy(
+      {provide: 'Bird', useClass: Duck, multi: true},
+      {provide: 'Bird', useClass: Duck, multi: true, deps: []});
+    falsy(
+      {provide: 'Bird', useValue: 'Eagle', multi: false},
+      {provide: 'Bird', useValue: 'Eagle', multi: true});
   });
 
 });
