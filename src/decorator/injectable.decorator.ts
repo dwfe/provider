@@ -1,7 +1,7 @@
 import {Type} from '@do-while-for-each/common'
 
-export function provideable() {
+export function injectable() {
   return (target: Type<any>) => {
-
+    return target;
   };
 }

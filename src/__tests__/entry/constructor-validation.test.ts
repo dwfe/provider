@@ -1,5 +1,5 @@
 import {describe, expect} from '@jest/globals';
-import {getLang} from './constructor-normal-use.test'
+import {getLang} from './constructor-normalization.test'
 import {Entry, IEntry} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck} from '../abc/bird'
@@ -8,7 +8,7 @@ function check(dto: IEntryTest) {
   expect(() => new Entry(dto as IEntry)).toThrow();
 }
 
-describe(`error use`, () => {
+describe(`incorrect use`, () => {
 
   test(`incorrect provide`, () => {
     check({});

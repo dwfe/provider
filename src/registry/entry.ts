@@ -14,7 +14,7 @@ export class Entry<T = any> implements IEntry {
 
   constructor(entry: IEntry) {
     /**
-     * Validation & Normalization
+     * Normalization & Validation
      */
     const {provide, useClass, useFactory, deps, useValue, multi} = entry;
     if (!provide) {
