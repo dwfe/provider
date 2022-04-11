@@ -18,7 +18,7 @@ function check(dto: IEntry, test: IEntryTest) {
 
 export const getLang = (user: User) => user?.lang || 'en';
 
-describe(`normal use`, () => {
+describe(`Entry.constructor, normal use`, () => {
 
   test(`class instance provided`, () => {
     check(

@@ -74,14 +74,20 @@ export class Entry<T = any> implements IEntry {
     return this.multi === multi;
   }
 
-  toSimple(): IEntry {
-    return {
-      provide: this.provide,
-      useClass: this.useClass,
-      deps: this.deps,
-      useValue: this.useValue,
-      multi: this.multi,
-    }
+  get base(): IEntry {
+    const {provide, useClass, useFactory, deps, useValue, multi} = this;
+    const result: IEntry = {provide};
+    if (useClass !== undefined)
+      result.useClass = useClass;
+    if (useFactory !== undefined)
+      result.useFactory = useFactory;
+    if (deps !== undefined)
+      result.deps = deps;
+    if (useValue !== undefined)
+      result.useValue = useValue;
+    if (multi !== undefined)
+      result.multi = multi;
+    return result;
   }
 
 }

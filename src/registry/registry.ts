@@ -19,7 +19,7 @@ export class Registry {
     if (multi) {
       const isDuplicate = existedEntries.some(x => x.equals(entry));
       if (isDuplicate) {
-        console.warn(`Prevented an attempt to add a duplicate to the registry. New entry:`, entry.toSimple(), `Existed entries:`, existedEntries.map(x => x.toSimple()));
+        console.warn(`Prevented an attempt to add a duplicate to the registry. New entry:`, entry.base, `Existed entries:`, existedEntries.map(x => x.base));
         return;
       }
       existedEntries.push(entry);
@@ -27,14 +27,14 @@ export class Registry {
     } else {
       if (existedEntries.length === 0) {
         this.map.set(provide, [entry]);
-        console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.toSimple());
+        console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.base);
         return;
       } else if (existedEntries.length === 1) {
         this.map.set(provide, [entry]);
-        console.warn(`The existing entry has been replaced with:`, entry.toSimple());
+        console.warn(`The existing entry has been replaced with:`, entry.base);
         return;
       }
-      console.error(`The registry contains several entries, but the new entry goes without the "multi" flag. New entry:`, entry.toSimple(), `Existed entries:`, existedEntries.map(x => x.toSimple()));
+      console.error(`The registry contains several entries, but the new entry goes without the "multi" flag. New entry:`, entry.base, `Existed entries:`, existedEntries.map(x => x.base));
       throw new Error(`Flag "multi" must be set to true in new entry`);
     }
   }

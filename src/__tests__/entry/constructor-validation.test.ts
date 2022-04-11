@@ -8,7 +8,7 @@ function check(dto: IEntryTest) {
   expect(() => new Entry(dto as IEntry)).toThrow();
 }
 
-describe(`incorrect use`, () => {
+describe(`Entry.constructor, incorrect use`, () => {
 
   test(`incorrect provide`, () => {
     check({});

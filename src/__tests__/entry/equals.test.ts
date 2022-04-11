@@ -12,7 +12,7 @@ function falsy(a: IEntry, b = {...a}) {
   expect(new Entry(a).equals(new Entry(b))).toBe(false)
 }
 
-describe(`equals`, () => {
+describe(`Entry.equals`, () => {
 
   test(`class instance provided`, () => {
     truthy({provide: Duck});
