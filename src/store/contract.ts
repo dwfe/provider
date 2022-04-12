@@ -1,5 +1,5 @@
-export interface IEntity<TBase = any> {
-  base: TBase;
+export interface IEntity {
+  base: any;
   deps?: any[];
   value: any;
 }

@@ -7,3 +7,9 @@ export interface IEntryTest {
   multi?: any;
   expected?: any;
 }
+
+export interface IEntityTest {
+  base?: any;
+  deps?: any;
+  value?: any;
+}
