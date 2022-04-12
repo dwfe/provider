@@ -3,8 +3,8 @@ import {Store} from '../store';
 
 export class Provider {
 
+  private store = new Store(); // store of instances e.g. instances of singletons
   private registry = new Registry();
-  private store = new Store();
 
   get(provide: any) {
     const entries = this.registry.get(provide);
