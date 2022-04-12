@@ -1,5 +1,5 @@
 import {describe, expect} from '@jest/globals';
-import {ifArraysEqual} from '../../registry/util'
+import {arraysEqualFailCheck} from '../../util'
 import {Entry, IEntry} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
@@ -10,7 +10,7 @@ function check(dto: IEntry, test: IEntryTest) {
   expect(entry.provide).toBe(test.provide);
   expect(entry.useClass).toBe(test.useClass);
   expect(entry.useFactory).toBe(test.useFactory);
-  expect(ifArraysEqual(entry.deps, test.deps)).toBe(true);
+  expect(arraysEqualFailCheck(entry.deps, test.deps)).toBe(true);
   expect(entry.useValue).toBe(test.useValue);
   expect(entry.multi).toBe(test.multi);
   expect(entry.expected).toBe(test.expected);

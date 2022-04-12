@@ -1,8 +1,8 @@
 import {isPrimitive, Type} from '@do-while-for-each/common'
-import {ifArraysEqual, isFunction} from './util'
+import {arraysEqualFailCheck, isFunction} from '../util'
 import {IEntry} from './contract'
 
-export class Entry<TProvide = any> implements IEntry {
+export class Entry<TProvide = any> implements IEntry<TProvide> {
   readonly provide: TProvide;  // !!any
   readonly useClass?: Type<any>;  // undefined || constructor
   readonly useFactory?: Function; // undefined || function
@@ -62,8 +62,8 @@ export class Entry<TProvide = any> implements IEntry {
     }
     this.multi = !!multi || false;
     if (!this.expected) {
-      console.error(`The expected result is undefined:`, entry);
-      throw new Error('The expected result is undefined');
+      console.error(`The "expected" result is undefined:`, entry);
+      throw new Error('The "expected" result is undefined');
     }
   }
 
@@ -74,7 +74,7 @@ export class Entry<TProvide = any> implements IEntry {
       return false;
     if (this.useFactory !== useFactory)
       return false;
-    if (!ifArraysEqual(this.deps, deps))
+    if (!arraysEqualFailCheck(this.deps, deps))
       return false;
     if (this.useValue !== useValue)
       return false;

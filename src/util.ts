@@ -1,4 +1,4 @@
-export function ifArraysEqual(a: any, b: any): boolean {
+export function arraysEqualFailCheck(a: any, b: any): boolean {
   const aIsArr = Array.isArray(a);
   const bIsArr = Array.isArray(b);
   if (aIsArr && bIsArr)
@@ -6,6 +6,14 @@ export function ifArraysEqual(a: any, b: any): boolean {
   else if (aIsArr || bIsArr)
     return false;
   return true; // both values are not arrays -> don't interfere with possible subsequent checks
+}
+
+export function arraysEqualStrictCheck(a: any, b: any): boolean {
+  const aIsArr = Array.isArray(a);
+  const bIsArr = Array.isArray(b);
+  if (aIsArr && bIsArr)
+    return arraysEqual(a, b);
+  return false;
 }
 
 export function arraysEqual(a: any[], b: any[]): boolean {
