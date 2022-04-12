@@ -1,9 +1,11 @@
+import {Type} from '@do-while-for-each/common'
+import {arraysEqualStrictCheck} from '../util'
 import {IEntity} from './contract';
 
 export class Entity implements IEntity {
-  readonly base: any;   // constructor | function
-  readonly deps: any[]; // params for base
-  readonly value: any;
+  readonly base: Type<any>; // constructor
+  readonly deps: any[]; // params for instance of base
+  readonly value: any; // instance
 
   constructor(entity: IEntity) {
     const {base, deps, value} = entity;
@@ -24,8 +26,18 @@ export class Entity implements IEntity {
     this.value = value;
   }
 
-  // equals(entity: Entity): boolean {
-  //   return false;
-  // }
+  equals({base, deps}: Entity): boolean {
+    if (this.base !== base)
+      return false;
+    return arraysEqualStrictCheck(this.deps, deps);
+  }
+
+  get orig(): IEntity {
+    return {
+      base: this.base,
+      deps: [...this.deps],
+      value: this.value,
+    };
+  }
 
 }

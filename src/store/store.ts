@@ -1,12 +1,13 @@
+import {Type} from '@do-while-for-each/common'
 import {arraysEqualStrictCheck} from '../util';
-import {IEntity} from './contract';
+import {IEntity, IIdentity} from './contract';
 import {Entity} from './entity';
 
 export class Store {
 
-  private map = new Map<any, Entity[]>();
+  private map = new Map<Type<any>, Entity[]>();
 
-  get<TValue>(identity: { base: any; deps?: any[] }): TValue | undefined {
+  get<TValue>(identity: IIdentity): TValue | undefined {
     const existed = this.map.get(identity.base);
     if (!existed)
       return;

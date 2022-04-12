@@ -1,0 +1,8 @@
+
+const user = new User('Tom');
+{base: User, deps: [String], value: user}
+
+
+Error:
+const getLang = (user: User) => user?.lang || 'en';
+{base: getLang, deps: [User], value: 'en'}

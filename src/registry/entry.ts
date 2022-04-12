@@ -89,7 +89,7 @@ export class Entry<TProvide = any> implements IEntry<TProvide> {
     if (useFactory !== undefined)
       result.useFactory = useFactory;
     if (deps !== undefined)
-      result.deps = deps;
+      result.deps = [...deps];
     if (useValue !== undefined)
       result.useValue = useValue;
     if (multi !== undefined)
