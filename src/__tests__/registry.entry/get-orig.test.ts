@@ -5,13 +5,13 @@ import {getLang} from './constructor-normalization.test';
 import {User} from '../abc/user';
 
 function check(dto: IEntry, props: Array<keyof IEntry>) {
-  const base = new Entry(dto).base;
-  expect(Object.keys(base).length).toBe(props.length);
+  const orig = new Entry(dto).orig;
+  expect(Object.keys(orig).length).toBe(props.length);
   for (const prop of props)
-    expect(base.hasOwnProperty(prop)).toBe(true);
+    expect(orig.hasOwnProperty(prop)).toBe(true);
 }
 
-describe(`Entry.base`, () => {
+describe(`Entry.orig`, () => {
 
   test(`class instance provided`, () => {
     check(

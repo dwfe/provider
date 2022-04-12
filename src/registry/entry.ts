@@ -81,7 +81,7 @@ export class Entry<TProvide = any> implements IEntry<TProvide> {
     return this.multi === multi;
   }
 
-  get base(): IEntry<TProvide> {
+  get orig(): IEntry<TProvide> {
     const {provide, useClass, useFactory, deps, useValue, multi} = this;
     const result: IEntry = {provide};
     if (useClass !== undefined)
