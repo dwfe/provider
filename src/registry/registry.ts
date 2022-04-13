@@ -1,5 +1,5 @@
-import {ITemplate} from './contract'
 import {Template} from './entry/template'
+import {ITemplate} from './contract'
 import {Value} from './entry/value'
 
 export class Registry {
