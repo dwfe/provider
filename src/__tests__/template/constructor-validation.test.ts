@@ -1,13 +1,13 @@
 import {describe, expect} from '@jest/globals';
-import {getLang} from './constructor-normalization.test'
 import {Template, ITemplate} from '../../registry'
-import {IEntryTest} from '../abc/contract'
+import {ITemplateTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user'
+import {getLang} from '../abc/get-lang'
 
 //region Support
 
-function toThrow(dto: IEntryTest, message: string) {
+function toThrow(dto: ITemplateTest, message: string) {
   try {
     new Template(dto as ITemplate);
   } catch (err) {
@@ -18,7 +18,7 @@ function toThrow(dto: IEntryTest, message: string) {
   expect('unreachable code section').toBe('but it came to this anyway');
 }
 
-function noThrow(dto: IEntryTest) {
+function noThrow(dto: ITemplateTest) {
   expect(() => new Template(dto as ITemplate)).not.toThrow();
 }
 

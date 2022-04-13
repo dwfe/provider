@@ -1,10 +1,11 @@
-import {Template} from './entry/template'
+import {Template} from './template/template'
 import {ITemplate} from './contract'
-import {Value} from './entry/value'
+import {Value} from './value/value'
 
 export class Registry {
 
   private templates = new Map<any, Template[]>();
+  // @ts-ignore
   private values = new Map<any, Value[]>();
 
   get size(): number {

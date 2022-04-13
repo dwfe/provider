@@ -15,19 +15,19 @@
 {provide: "lang", useFactory: (user: User) => user?.lang || 'en', deps: [User]}
 ```
 
-### Value provided
-
-```
-{provide: Duck, useValue: 123}
-{provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123}
-```
-
 ### Multiple provided
 
 ```
 {provide: "Bird", useClass: Duck, multi: true}
 {provide: "Bird", useClass: Turkey, multi: true}
-{provide: "Bird", useValue: 'Eagle', multi: true}
+{provide: 'Bird', useFactory: getLang, multi: true}
+```
+
+### Value provided
+
+```
+{provide: Duck, useValue: 123}
+{provide: Turkey, useValue: 123, deps: ['ololo!']}
 ```
 
 ## Single value/instance

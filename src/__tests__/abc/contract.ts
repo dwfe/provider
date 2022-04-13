@@ -1,4 +1,4 @@
-export interface IEntryTest {
+export interface ITemplateTest {
   provide?: any;
   useClass?: any;
   useFactory?: any;
@@ -7,8 +7,9 @@ export interface IEntryTest {
   expected?: any;
 }
 
-export interface IEntityTest {
+export interface IValueTest {
   provide?: any;
-  deps?: any;
   useValue?: any;
+  deps?: any;
+  multi?: any;
 }

@@ -1,8 +1,8 @@
 import {describe, expect} from '@jest/globals';
-import {getLang} from './constructor-normalization.test'
 import {Template, ITemplate} from '../../registry'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user';
+import {getLang} from '../abc/get-lang'
 
 //region Support
 

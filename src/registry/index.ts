@@ -1,4 +1,4 @@
 export {ITemplate, IValue} from './contract';
-export {Template} from './entry/template';
-export {Value} from './entry/value';
+export {Template} from './template/template';
+export {Value} from './value/value';
 export {Registry} from './registry';
