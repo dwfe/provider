@@ -1,8 +1,8 @@
 import {describe, expect} from '@jest/globals';
 import {Template, ITemplate} from '../../registry';
-import {Duck, Turkey} from '../abc/bird';
-import {User} from '../abc/user';
 import {getLang} from '../abc/get-lang'
+import {Duck} from '../abc/bird';
+import {User} from '../abc/user';
 
 //region Support
 
@@ -15,7 +15,7 @@ function check(dto: ITemplate, props: Array<keyof ITemplate>) {
 
 //endregion Support
 
-describe(`Entry.get-orig`, () => {
+describe(`Template.get-orig`, () => {
 
   test(`class instance provided`, () => {
     check(
@@ -35,22 +35,13 @@ describe(`Entry.get-orig`, () => {
       ['provide', 'useFactory', 'deps']);
   });
 
-  test(`value provided`, () => {
-    check(
-      {provide: Duck, useValue: 123},
-      ['provide', 'useValue']);
-    check(
-      {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123},
-      ['provide', 'useValue', 'deps']);
-  });
-
   test(`multiple provided`, () => {
     check(
       {provide: 'Bird', useClass: Duck, multi: true},
       ['provide', 'useClass', 'multi']);
     check(
-      {provide: 'Bird', useValue: 'Eagle', multi: true},
-      ['provide', 'useValue', 'multi']);
+      {provide: 'Bird', useFactory: getLang, multi: true},
+      ['provide', 'useFactory', 'multi']);
   });
 
 });

@@ -1,8 +1,8 @@
 import {describe, expect} from '@jest/globals';
 import {Template, ITemplate} from '../../registry'
 import {Duck, Turkey} from '../abc/bird'
-import {User} from '../abc/user';
 import {getLang} from '../abc/get-lang'
+import {User} from '../abc/user';
 
 //region Support
 
@@ -16,7 +16,7 @@ function falsy(a: ITemplate, b = {...a}) {
 
 //endregion Support
 
-describe(`Entry.equals`, () => {
+describe(`Template.equals`, () => {
 
   test(`class instance provided`, () => {
     truthy({provide: Duck});
@@ -51,23 +51,9 @@ describe(`Entry.equals`, () => {
     )
   });
 
-  test(`value provided`, () => {
-    truthy({provide: Duck, useValue: 123});
-    truthy({provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123});
-    falsy(
-      {provide: Duck},
-      {provide: Duck, useValue: 123});
-    falsy(
-      {provide: Duck, useValue: null},
-      {provide: Duck, useValue: 123});
-    falsy(
-      {provide: Duck, useValue: User},
-      {provide: Turkey, useValue: User});
-  });
-
   test(`multiple provided`, () => {
     truthy({provide: 'Bird', useClass: Duck, multi: true});
-    truthy({provide: 'Bird', useValue: 'Eagle', multi: true});
+    truthy({provide: 'Bird', useClass: Turkey, multi: true});
     falsy(
       {provide: 'Bird', useClass: Duck},
       {provide: 'Bird', useClass: Duck, multi: true});
@@ -75,8 +61,8 @@ describe(`Entry.equals`, () => {
       {provide: 'Bird', useClass: Duck, multi: true},
       {provide: 'Bird', useClass: Duck, multi: true, deps: []});
     falsy(
-      {provide: 'Bird', useValue: 'Eagle', multi: false},
-      {provide: 'Bird', useValue: 'Eagle', multi: true});
+      {provide: 'Bird', useFactory: getLang, multi: false},
+      {provide: 'Bird', useFactory: getLang, multi: true});
   });
 
 });

@@ -9,7 +9,7 @@ export class Template implements ITemplate {
   readonly deps?: any[]; // undefined | any[]
   readonly multi: boolean; // false | true
 
-  readonly expected!: 'instance' | 'factory-result';
+  readonly expected: 'instance' | 'factory-result';
 
   constructor(template: ITemplate) {
     const {provide, useClass, useFactory, deps, multi} = template;
@@ -32,7 +32,14 @@ export class Template implements ITemplate {
       console.error(`At the same time, you can set either "useClass" or "useFactory":`, template);
       throw new Error(`Only one: "useClass" or "useFactory"`);
     }
-    if (useClass || !useFactory) {
+    if (useFactory) {
+      if (typeof useFactory !== 'function') {
+        console.error(`Incorrect "useFactory":`, template);
+        throw new Error(`Incorrect "useFactory"`);
+      }
+      this.useFactory = useFactory;
+      this.expected = 'factory-result';
+    } else { // if (useClass || !useFactory)
       if (!!useClass && typeof useClass !== 'function') {
         console.error(`Incorrect "useClass":`, template);
         throw new Error(`Incorrect "useClass"`);
@@ -41,13 +48,6 @@ export class Template implements ITemplate {
       if (!this.useClass && isFunction(this.provide))
         this.useClass = this.provide as unknown as Type<any>;
       this.expected = 'instance';
-    } else if (useFactory) {
-      if (typeof useFactory !== 'function') {
-        console.error(`Incorrect "useFactory":`, template);
-        throw new Error(`Incorrect "useFactory"`);
-      }
-      this.useFactory = useFactory;
-      this.expected = 'factory-result';
     }
     if (deps === null || !!deps && !Array.isArray(deps)) {
       console.error(`Incorrect "deps":`, template);
@@ -56,11 +56,6 @@ export class Template implements ITemplate {
     this.deps = deps;
 
     this.multi = !!multi || false;
-
-    if (!this.expected) {
-      console.error(`The "expected" is undefined:`, template);
-      throw new Error('The "expected" is undefined');
-    }
   }
 
   equals({provide, useClass, useFactory, deps, multi}: Template): boolean {

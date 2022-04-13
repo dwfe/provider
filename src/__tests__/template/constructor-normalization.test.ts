@@ -1,6 +1,6 @@
 import {describe, expect} from '@jest/globals';
-import {arraysEqualFailCheck} from '../../util'
 import {ITemplate, Template} from '../../registry'
+import {arraysEqualFailCheck} from '../../util'
 import {ITemplateTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {getLang} from '../abc/get-lang'
