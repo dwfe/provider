@@ -54,6 +54,8 @@ export class Template implements ITemplate {
       throw new Error(`Incorrect "deps"`);
     }
     this.deps = deps;
+    if (!!deps && deps.length === 0)
+      this.deps = undefined;
 
     this.multi = !!multi || false;
   }

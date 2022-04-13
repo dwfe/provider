@@ -27,6 +27,9 @@ describe(`Template.get-orig`, () => {
     check(
       {provide: Duck, useClass: Duck, deps: ['quack!']},
       ['provide', 'useClass', 'deps']);
+    check(
+      {provide: Duck, useClass: Duck, deps: []},
+      ['provide', 'useClass']);
   });
 
   test(`factory result provided`, () => {

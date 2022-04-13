@@ -1,23 +1,24 @@
+import {TemplateStore} from './template/template.store'
 import {Template} from './template/template'
 import {ITemplate} from './contract'
 import {Value} from './value/value'
 
 export class Registry {
 
-  private templates = new Map<any, Template[]>();
+  private templateStore = new TemplateStore();
   // @ts-ignore
   private values = new Map<any, Value[]>();
 
   get size(): number {
-    return this.templates.size;
+    return this.templateStore.size;
   }
 
   has(provide: any): boolean {
-    return this.templates.has(provide);
+    return this.templateStore.has(provide);
   }
 
   get<TProvide>(provide: TProvide): Template[] | undefined {
-    const entries = this.templates.get(provide);
+    const entries = this.templateStore.get(provide);
     return Array.isArray(entries) ? [...entries] : undefined;
   }
 
@@ -26,7 +27,7 @@ export class Registry {
     const {provide, multi} = entry;
     const existedEntries = this.get(provide);
     if (!existedEntries) {
-      this.templates.set(provide, [entry]);
+      this.templateStore.set(provide, [entry]);
       return;
     }
     if (multi) {
@@ -40,18 +41,16 @@ export class Registry {
         console.warn(`Prevented an attempt to add a duplicate to the registry. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));
         return;
       }
-// TODO set.test.ts: `multi. add one more, useValue`
       existedEntries.push(entry);
-      this.templates.set(provide, existedEntries);
+      this.templateStore.set(provide, existedEntries);
       return;
     }
     // for multi: false
     switch (existedEntries.length) {
       case 0:
         console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.orig);
-        this.templates.set(provide, [entry]);
+        this.templateStore.set(provide, [entry]);
         return;
-// TODO set.test.ts: `noMulti. existed.length === 1, replace existed useValue #2`
       case 1:
         const existed = existedEntries[0];
         if (entry.equals(existed)) {
@@ -63,7 +62,7 @@ export class Registry {
           return;
         }
         console.warn(`The existing entry has been replaced with:`, entry.orig);
-        this.templates.set(provide, [entry]);
+        this.templateStore.set(provide, [entry]);
         return;
       default:
         console.error(`The registry contains several "multi" entries, but the new entry goes without the "multi" flag. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));

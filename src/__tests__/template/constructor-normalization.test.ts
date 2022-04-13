@@ -33,6 +33,9 @@ describe(`Template.constructor, normal use`, () => {
       {provide: Duck, useClass: Duck, deps: ['quack!', Map]},
       {provide: Duck, useClass: Duck, useFactory: undefined, deps: ['quack!', Map], multi: false, expected: 'instance'});
     check(
+      {provide: Duck, useClass: Duck, deps: []},
+      {provide: Duck, useClass: Duck, useFactory: undefined, deps: undefined, multi: false, expected: 'instance'});
+    check(
       {provide: Turkey, useClass: Duck, deps: ['ololo!']},
       {provide: Turkey, useClass: Duck, useFactory: undefined, deps: ['ololo!'], multi: false, expected: 'instance'});
   });
@@ -41,6 +44,9 @@ describe(`Template.constructor, normal use`, () => {
     check(
       {provide: 'lang', useFactory: getLang, deps: [User]},
       {provide: 'lang', useClass: undefined, useFactory: getLang, deps: [User], multi: false, expected: 'factory-result'});
+    check(
+      {provide: 'lang', useFactory: getLang, deps: []},
+      {provide: 'lang', useClass: undefined, useFactory: getLang, deps: undefined, multi: false, expected: 'factory-result'});
   });
 
   test(`multiple provided`, () => {

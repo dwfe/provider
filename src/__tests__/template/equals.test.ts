@@ -24,6 +24,9 @@ describe(`Template.equals`, () => {
     truthy({provide: Duck}, {provide: Duck, useClass: Duck});
     truthy({provide: Duck, useClass: Duck, deps: ['quack!']});
     truthy({provide: Duck, useClass: Duck, deps: []});
+    truthy(
+      {provide: Duck, useClass: Duck, deps: []},
+      {provide: Duck, useClass: Duck, deps: undefined});
     truthy({provide: Duck, useClass: Duck, deps: [null, User]});
     truthy({provide: Turkey, useClass: Duck, deps: ['ololo!']});
     falsy(
@@ -54,12 +57,12 @@ describe(`Template.equals`, () => {
   test(`multiple provided`, () => {
     truthy({provide: 'Bird', useClass: Duck, multi: true});
     truthy({provide: 'Bird', useClass: Turkey, multi: true});
+    truthy(
+      {provide: 'Bird', useClass: Duck, multi: true},
+      {provide: 'Bird', useClass: Duck, multi: true, deps: []});
     falsy(
       {provide: 'Bird', useClass: Duck},
       {provide: 'Bird', useClass: Duck, multi: true});
-    falsy(
-      {provide: 'Bird', useClass: Duck, multi: true},
-      {provide: 'Bird', useClass: Duck, multi: true, deps: []});
     falsy(
       {provide: 'Bird', useFactory: getLang, multi: false},
       {provide: 'Bird', useFactory: getLang, multi: true});

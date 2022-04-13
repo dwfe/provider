@@ -14,3 +14,5 @@ export interface IValue {
   useValue: any;
   multi?: boolean;
 }
+
+export type Entry = ITemplate | IValue;
