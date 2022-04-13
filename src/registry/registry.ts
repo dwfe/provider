@@ -37,6 +37,7 @@ export class Registry {
         console.warn(`Prevented an attempt to add a duplicate to the registry. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));
         return;
       }
+// TODO set.test.ts: `multi. add one more, useValue`
       existedEntries.push(entry);
       this.map.set(provide, existedEntries);
       return;
@@ -47,6 +48,7 @@ export class Registry {
         console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.orig);
         this.map.set(provide, [entry]);
         return;
+// TODO set.test.ts: `noMulti. existed.length === 1, replace existed useValue #2`
       case 1:
         const existed = existedEntries[0];
         if (entry.equals(existed)) {

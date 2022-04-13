@@ -5,6 +5,8 @@ import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user'
 
+//region Support
+
 function check(dto: IEntry, test: IEntryTest) {
   const entry = new Entry(dto);
   expect(entry.provide).toBe(test.provide);
@@ -17,6 +19,8 @@ function check(dto: IEntry, test: IEntryTest) {
 }
 
 export const getLang = (user: User) => user?.lang || 'en';
+
+//endregion Support
 
 describe(`Entry.constructor, normal use`, () => {
 
@@ -47,7 +51,7 @@ describe(`Entry.constructor, normal use`, () => {
       {provide: Duck, useClass: undefined, useFactory: undefined, deps: undefined, useValue: 123, multi: false, expected: 'value'});
     check(
       {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123},
-      {provide: Turkey, useClass: undefined, useFactory: undefined, deps: undefined, useValue: 123, multi: false, expected: 'value'});
+      {provide: Turkey, useClass: undefined, useFactory: undefined, deps: ['ololo!'], useValue: 123, multi: false, expected: 'value'});
   });
 
   test(`multiple provided`, () => {

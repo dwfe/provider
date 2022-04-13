@@ -1,6 +1,10 @@
 import {describe, expect} from '@jest/globals';
 import {Entry, Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
+import {User} from '../abc/user';
+import {L10nService} from '../abc/l10n.service';
+
+//region Support
 
 function getEntry(registry: Registry, provide: any): Entry {
   const result = registry.get(provide) as Array<any>
@@ -18,6 +22,8 @@ function getEntries(registry: Registry, provide: any): Entry[] {
   expect(result.some(x => x.provide !== provide)).toBe(false);
   return result;
 }
+
+//endregion Support
 
 describe(`Registry.set`, () => {
 
@@ -72,10 +78,29 @@ describe(`Registry.set`, () => {
     registry.set({provide: Duck, multi: true});
     expect(registry.size).toBe(1);
 
-    registry.set({provide: Duck, useValue: 123, multi: true});
+    registry.set({provide: Duck, useClass: Turkey, multi: true});
     expect(registry.size).toBe(1);
 
-    getEntries(registry, Duck);
+    expect(getEntries(registry, Duck).length).toBe(2);
+  });
+
+  test(`multi. add one more, useValue`, () => {
+    const registry = new Registry();
+
+    registry.set({provide: User, useValue: 123, multi: true});
+    expect(registry.size).toBe(1);
+
+    registry.set({provide: User, deps: ['Tom'], useValue: 77, multi: true});
+    expect(registry.size).toBe(1);
+    expect(getEntries(registry, User).length).toBe(2);
+
+    registry.set({provide: User, deps: ['Tom', L10nService], useValue: 42, multi: true});
+    expect(registry.size).toBe(1);
+    expect(getEntries(registry, User).length).toBe(3);
+
+    registry.set({provide: User, deps: ['Tom', L10nService], useValue: 98, multi: true});
+    expect(registry.size).toBe(1);
+    expect(getEntries(registry, User).length).toBe(4);
   });
 
   test(`noMulti. existed.length === 0`, () => {
@@ -136,6 +161,34 @@ describe(`Registry.set`, () => {
     expect(registry.size).toBe(1);
   });
 
+  test(`noMulti. existed.length === 1, replace existed useValue #1`, () => {
+    const registry = new Registry();
+
+    registry.set({provide: Duck, useValue: null});
+    const entry1 = getEntry(registry, Duck);
+
+    registry.set({provide: Duck, useValue: 123});
+    const entry2 = getEntry(registry, Duck);
+
+    expect(entry1 === entry2).toBe(false);
+    expect(registry.size).toBe(1);
+    expect(getEntry(registry, Duck).useValue).toBe(123);
+  });
+
+  test(`noMulti. existed.length === 1, replace existed useValue #2`, () => {
+    const registry = new Registry();
+
+    registry.set({provide: Duck, useValue: null});
+    const entry1 = getEntry(registry, Duck);
+
+    registry.set({provide: Duck, deps: ['some'], useValue: 123});
+    const entry2 = getEntry(registry, Duck);
+
+    expect(entry1 === entry2).toBe(false);
+    expect(registry.size).toBe(2);
+    // expect(getEntry(registry, Duck).useValue).toBe(123);
+  });
+
   test(`noMulti. existed.length > 1`, () => {
     const registry = new Registry();
 
@@ -145,9 +198,10 @@ describe(`Registry.set`, () => {
     registry.set({provide: Duck, useClass: Turkey, multi: true});
     expect(registry.size).toBe(1);
 
-    getEntries(registry, Duck);
+    expect(getEntries(registry, Duck).length).toBe(2);
 
     expect(() => registry.set({provide: Duck})).toThrow();
+    expect(getEntries(registry, Duck).length).toBe(2);
   });
 
 });

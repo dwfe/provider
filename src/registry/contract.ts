@@ -4,7 +4,7 @@ export interface IEntry<TProvide = any> {
   provide: TProvide;
   useClass?: Type<any>;
   useFactory?: Function;
-  deps?: any;
   useValue?: any;
+  deps?: any;
   multi?: boolean;
 }

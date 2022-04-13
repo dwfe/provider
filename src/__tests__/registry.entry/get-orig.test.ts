@@ -4,6 +4,8 @@ import {Duck, Turkey} from '../abc/bird';
 import {getLang} from './constructor-normalization.test';
 import {User} from '../abc/user';
 
+//region Support
+
 function check(dto: IEntry, props: Array<keyof IEntry>) {
   const orig = new Entry(dto).orig;
   expect(Object.keys(orig).length).toBe(props.length);
@@ -11,33 +13,35 @@ function check(dto: IEntry, props: Array<keyof IEntry>) {
     expect(orig.hasOwnProperty(prop)).toBe(true);
 }
 
-describe(`Entry.orig`, () => {
+//endregion Support
+
+describe(`Entry.get-orig`, () => {
 
   test(`class instance provided`, () => {
     check(
       {provide: Duck},
-      ['provide', 'useClass', 'multi']);
+      ['provide', 'useClass']);
     check(
       {provide: Duck, useClass: Duck},
-      ['provide', 'useClass', 'multi']);
+      ['provide', 'useClass']);
     check(
       {provide: Duck, useClass: Duck, deps: ['quack!']},
-      ['provide', 'useClass', 'deps', 'multi']);
+      ['provide', 'useClass', 'deps']);
   });
 
   test(`factory result provided`, () => {
     check(
       {provide: 'lang', useFactory: getLang, deps: [User]},
-      ['provide', 'useFactory', 'deps', 'multi']);
+      ['provide', 'useFactory', 'deps']);
   });
 
   test(`value provided`, () => {
     check(
       {provide: Duck, useValue: 123},
-      ['provide', 'useValue', 'multi']);
+      ['provide', 'useValue']);
     check(
       {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123},
-      ['provide', 'useValue', 'multi']);
+      ['provide', 'useValue', 'deps']);
   });
 
   test(`multiple provided`, () => {

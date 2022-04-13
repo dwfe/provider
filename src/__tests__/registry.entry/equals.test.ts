@@ -4,6 +4,8 @@ import {Entry, IEntry} from '../../registry'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user';
 
+//region Support
+
 function truthy(a: IEntry, b = {...a}) {
   expect(new Entry(a).equals(new Entry(b))).toBe(true)
 }
@@ -11,6 +13,8 @@ function truthy(a: IEntry, b = {...a}) {
 function falsy(a: IEntry, b = {...a}) {
   expect(new Entry(a).equals(new Entry(b))).toBe(false)
 }
+
+//endregion Support
 
 describe(`Entry.equals`, () => {
 

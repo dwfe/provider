@@ -5,6 +5,8 @@ import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user'
 
+//region Support
+
 function toThrow(dto: IEntryTest, message: string) {
   try {
     new Entry(dto as IEntry);
@@ -19,6 +21,8 @@ function toThrow(dto: IEntryTest, message: string) {
 function noThrow(dto: IEntryTest) {
   expect(() => new Entry(dto as IEntry)).not.toThrow();
 }
+
+//endregion Support
 
 describe(`Entry.constructor, incorrect use`, () => {
 

@@ -1,5 +1,5 @@
 /**
- * If in the calling code a or b are optional
+ * If in the calling code a or b do not necessarily have to be arrays
  */
 export function arraysEqualFailCheck(a: any, b: any): boolean {
   const aIsArr = Array.isArray(a);
@@ -12,7 +12,7 @@ export function arraysEqualFailCheck(a: any, b: any): boolean {
 }
 
 /**
- * If in the calling code a and b are required
+ * If in the calling code a and b must be an array
  */
 export function arraysEqualStrictCheck(a: any, b: any): boolean {
   const aIsArr = Array.isArray(a);

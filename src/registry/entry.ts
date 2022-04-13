@@ -6,8 +6,8 @@ export class Entry<TProvide = any> implements IEntry<TProvide> {
   readonly provide: TProvide;  // !!any
   readonly useClass?: Type<any>;  // undefined || constructor
   readonly useFactory?: Function; // undefined || function
-  readonly deps?: any[]; // undefined | any[]
   readonly useValue?: any; // undefined | any
+  readonly deps?: any[]; // undefined | any[]
   readonly multi: boolean; // false | true
 
   readonly expected!: 'value' | 'instance' | 'factory-result';
@@ -51,15 +51,15 @@ export class Entry<TProvide = any> implements IEntry<TProvide> {
         this.useFactory = useFactory;
         this.expected = 'factory-result';
       }
-      if (deps === null || !!deps && !Array.isArray(deps)) {
-        console.error(`Incorrect deps:`, entry);
-        throw new Error('Incorrect deps');
-      }
-      this.deps = deps;
     } else {
       this.useValue = useValue;
       this.expected = 'value';
     }
+    if (deps === null || !!deps && !Array.isArray(deps)) {
+      console.error(`Incorrect deps:`, entry);
+      throw new Error('Incorrect deps');
+    }
+    this.deps = deps;
     this.multi = !!multi || false;
     if (!this.expected) {
       console.error(`The "expected" result is undefined:`, entry);
@@ -92,7 +92,7 @@ export class Entry<TProvide = any> implements IEntry<TProvide> {
       result.deps = [...deps];
     if (useValue !== undefined)
       result.useValue = useValue;
-    if (multi !== undefined)
+    if (multi)
       result.multi = multi;
     return result;
   }
