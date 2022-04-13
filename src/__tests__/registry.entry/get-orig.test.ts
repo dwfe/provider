@@ -1,13 +1,13 @@
 import {describe, expect} from '@jest/globals';
-import {Entry, IEntry} from '../../registry';
+import {Template, ITemplate} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
 import {getLang} from './constructor-normalization.test';
 import {User} from '../abc/user';
 
 //region Support
 
-function check(dto: IEntry, props: Array<keyof IEntry>) {
-  const orig = new Entry(dto).orig;
+function check(dto: ITemplate, props: Array<keyof ITemplate>) {
+  const orig = new Template(dto).orig;
   expect(Object.keys(orig).length).toBe(props.length);
   for (const prop of props)
     expect(orig.hasOwnProperty(prop)).toBe(true);

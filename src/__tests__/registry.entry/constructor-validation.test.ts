@@ -1,6 +1,6 @@
 import {describe, expect} from '@jest/globals';
 import {getLang} from './constructor-normalization.test'
-import {Entry, IEntry} from '../../registry'
+import {Template, ITemplate} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user'
@@ -9,7 +9,7 @@ import {User} from '../abc/user'
 
 function toThrow(dto: IEntryTest, message: string) {
   try {
-    new Entry(dto as IEntry);
+    new Template(dto as ITemplate);
   } catch (err) {
     expect(err).toBeInstanceOf(Error);
     expect(err).toHaveProperty('message', message);
@@ -19,7 +19,7 @@ function toThrow(dto: IEntryTest, message: string) {
 }
 
 function noThrow(dto: IEntryTest) {
-  expect(() => new Entry(dto as IEntry)).not.toThrow();
+  expect(() => new Template(dto as ITemplate)).not.toThrow();
 }
 
 //endregion Support

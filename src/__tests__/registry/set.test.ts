@@ -1,21 +1,21 @@
 import {describe, expect} from '@jest/globals';
-import {Entry, Registry} from '../../registry';
+import {Template, Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
 import {User} from '../abc/user';
 import {L10nService} from '../abc/l10n.service';
 
 //region Support
 
-function getEntry(registry: Registry, provide: any): Entry {
+function getEntry(registry: Registry, provide: any): Template {
   const result = registry.get(provide) as Array<any>
   expect(Array.isArray(result) && result.length === 1).toBe(true);
   const entry = result[0];
-  expect((entry instanceof Entry)).toBe(true);
+  expect((entry instanceof Template)).toBe(true);
   expect(entry).toHaveProperty('provide', provide);
   return entry;
 }
 
-function getEntries(registry: Registry, provide: any): Entry[] {
+function getEntries(registry: Registry, provide: any): Template[] {
   const result = registry.get(provide) as Array<any>
   expect(Array.isArray(result) && result.length > 1).toBe(true);
   expect(result.some(x => !x.multi)).toBe(false);
@@ -34,7 +34,7 @@ describe(`Registry.set`, () => {
     registry.set({provide: Duck});
     expect(registry.size).toBe(1);
 
-    registry.set(new Entry({provide: Turkey}));
+    registry.set(new Template({provide: Turkey}));
     expect(registry.size).toBe(2);
 
     getEntry(registry, Duck);

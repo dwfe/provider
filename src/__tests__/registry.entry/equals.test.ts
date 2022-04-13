@@ -1,17 +1,17 @@
 import {describe, expect} from '@jest/globals';
 import {getLang} from './constructor-normalization.test'
-import {Entry, IEntry} from '../../registry'
+import {Template, ITemplate} from '../../registry'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user';
 
 //region Support
 
-function truthy(a: IEntry, b = {...a}) {
-  expect(new Entry(a).equals(new Entry(b))).toBe(true)
+function truthy(a: ITemplate, b = {...a}) {
+  expect(new Template(a).equals(new Template(b))).toBe(true)
 }
 
-function falsy(a: IEntry, b = {...a}) {
-  expect(new Entry(a).equals(new Entry(b))).toBe(false)
+function falsy(a: ITemplate, b = {...a}) {
+  expect(new Template(a).equals(new Template(b))).toBe(false)
 }
 
 //endregion Support

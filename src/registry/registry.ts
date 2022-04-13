@@ -1,30 +1,31 @@
-import {IEntry} from './contract'
-import {Entry} from './entry'
+import {ITemplate} from './contract'
+import {Template} from './entry/template'
+import {Value} from './entry/value'
 
 export class Registry {
 
-  private entries = new Map<any, Entry[]>();
-  private entities = new Map<any, Entry[]>();
+  private templates = new Map<any, Template[]>();
+  private values = new Map<any, Value[]>();
 
   get size(): number {
-    return this.entries.size;
+    return this.templates.size;
   }
 
   has(provide: any): boolean {
-    return this.entries.has(provide);
+    return this.templates.has(provide);
   }
 
-  get<TProvide>(provide: TProvide): Entry[] | undefined {
-    const entries = this.entries.get(provide);
+  get<TProvide>(provide: TProvide): Template[] | undefined {
+    const entries = this.templates.get(provide);
     return Array.isArray(entries) ? [...entries] : undefined;
   }
 
-  set(data: Entry | IEntry): void {
-    const entry = data instanceof Entry ? data : new Entry(data);
+  set(data: Template | ITemplate): void {
+    const entry = data instanceof Template ? data : new Template(data);
     const {provide, multi} = entry;
     const existedEntries = this.get(provide);
     if (!existedEntries) {
-      this.entries.set(provide, [entry]);
+      this.templates.set(provide, [entry]);
       return;
     }
     if (multi) {
@@ -40,14 +41,14 @@ export class Registry {
       }
 // TODO set.test.ts: `multi. add one more, useValue`
       existedEntries.push(entry);
-      this.entries.set(provide, existedEntries);
+      this.templates.set(provide, existedEntries);
       return;
     }
     // for multi: false
     switch (existedEntries.length) {
       case 0:
         console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.orig);
-        this.entries.set(provide, [entry]);
+        this.templates.set(provide, [entry]);
         return;
 // TODO set.test.ts: `noMulti. existed.length === 1, replace existed useValue #2`
       case 1:
@@ -61,7 +62,7 @@ export class Registry {
           return;
         }
         console.warn(`The existing entry has been replaced with:`, entry.orig);
-        this.entries.set(provide, [entry]);
+        this.templates.set(provide, [entry]);
         return;
       default:
         console.error(`The registry contains several "multi" entries, but the new entry goes without the "multi" flag. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));

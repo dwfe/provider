@@ -1,11 +1,11 @@
 import {describe, expect} from '@jest/globals';
 import {arraysEqualStrictCheck} from '../../util'
-import {Entity, IEntity} from '../../registry'
+import {Value, IValue} from '../../registry'
 import {IEntityTest} from '../abc/contract'
 import {User} from '../abc/user'
 
-function check(dto: IEntity, test: IEntityTest) {
-  const entry = new Entity(dto);
+function check(dto: IValue, test: IEntityTest) {
+  const entry = new Value(dto);
   expect(entry.provide).toBe(test.provide);
   expect(arraysEqualStrictCheck(entry.deps, test.deps)).toBe(true);
   expect(entry.useValue).toBe(test.useValue);

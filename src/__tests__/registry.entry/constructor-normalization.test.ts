@@ -1,14 +1,14 @@
 import {describe, expect} from '@jest/globals';
 import {arraysEqualFailCheck} from '../../util'
-import {Entry, IEntry} from '../../registry'
+import {Template, ITemplate} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user'
 
 //region Support
 
-function check(dto: IEntry, test: IEntryTest) {
-  const entry = new Entry(dto);
+function check(dto: ITemplate, test: IEntryTest) {
+  const entry = new Template(dto);
   expect(entry.provide).toBe(test.provide);
   expect(entry.useClass).toBe(test.useClass);
   expect(entry.useFactory).toBe(test.useFactory);

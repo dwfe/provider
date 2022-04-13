@@ -1,6 +1,6 @@
 import {Type} from '@do-while-for-each/common'
 
-export interface IEntry {
+export interface ITemplate {
   provide: any;
   useClass?: Type<any>;
   useFactory?: Function;
@@ -8,7 +8,7 @@ export interface IEntry {
   multi?: boolean;
 }
 
-export interface IEntity {
+export interface IValue {
   provide: any;
   deps?: any[];
   useValue: any;
