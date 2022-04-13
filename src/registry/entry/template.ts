@@ -12,13 +12,13 @@ export class Template implements ITemplate {
   readonly expected!: 'instance' | 'factory-result';
 
   constructor(template: ITemplate) {
+    const {provide, useClass, useFactory, deps, multi} = template;
     /**
      * Normalization & Validation
      */
-    const {provide, useClass, useFactory, deps, multi} = template;
     if (provide == null) { // undefined, null
-      console.error(`Incorrect provide:`, template);
-      throw new Error('Incorrect provide');
+      console.error(`Incorrect "provide":`, template);
+      throw new Error('Incorrect "provide"');
     }
     if (isPrimitive(provide)
       && useClass === undefined
@@ -27,6 +27,7 @@ export class Template implements ITemplate {
       throw new Error('Incorrect template with primitive type of provide');
     }
     this.provide = provide;
+
     if (!!useClass && !!useFactory) {
       console.error(`At the same time, you can set either useClass or useFactory:`, template);
       throw new Error('useClass or useFactory');
@@ -53,7 +54,9 @@ export class Template implements ITemplate {
       throw new Error('Incorrect deps');
     }
     this.deps = deps;
+
     this.multi = !!multi || false;
+
     if (!this.expected) {
       console.error(`The "expected" result is undefined:`, template);
       throw new Error('The "expected" result is undefined');
