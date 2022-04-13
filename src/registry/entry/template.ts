@@ -18,24 +18,24 @@ export class Template implements ITemplate {
      */
     if (provide == null) { // undefined, null
       console.error(`Incorrect "provide":`, template);
-      throw new Error('Incorrect "provide"');
+      throw new Error(`Incorrect "provide"`);
     }
     if (isPrimitive(provide)
       && useClass === undefined
       && useFactory === undefined) {
       console.error(`If "provide" is a primitive, then one of the following must be set: useClass, useFactory.`, template);
-      throw new Error('Incorrect template with primitive type of provide');
+      throw new Error(`Incorrect template with primitive type of "provide"`);
     }
     this.provide = provide;
 
     if (!!useClass && !!useFactory) {
-      console.error(`At the same time, you can set either useClass or useFactory:`, template);
-      throw new Error('useClass or useFactory');
+      console.error(`At the same time, you can set either "useClass" or "useFactory":`, template);
+      throw new Error(`Only one: "useClass" or "useFactory"`);
     }
     if (useClass || !useFactory) {
       if (!!useClass && typeof useClass !== 'function') {
-        console.error(`Incorrect useClass:`, template);
-        throw new Error('Incorrect useClass');
+        console.error(`Incorrect "useClass":`, template);
+        throw new Error(`Incorrect "useClass"`);
       }
       this.useClass = useClass;
       if (!this.useClass && isFunction(this.provide))
@@ -43,23 +43,23 @@ export class Template implements ITemplate {
       this.expected = 'instance';
     } else if (useFactory) {
       if (typeof useFactory !== 'function') {
-        console.error(`Incorrect useFactory:`, template);
-        throw new Error('Incorrect useFactory');
+        console.error(`Incorrect "useFactory":`, template);
+        throw new Error(`Incorrect "useFactory"`);
       }
       this.useFactory = useFactory;
       this.expected = 'factory-result';
     }
     if (deps === null || !!deps && !Array.isArray(deps)) {
-      console.error(`Incorrect deps:`, template);
-      throw new Error('Incorrect deps');
+      console.error(`Incorrect "deps":`, template);
+      throw new Error(`Incorrect "deps"`);
     }
     this.deps = deps;
 
     this.multi = !!multi || false;
 
     if (!this.expected) {
-      console.error(`The "expected" result is undefined:`, template);
-      throw new Error('The "expected" result is undefined');
+      console.error(`The "expected" is undefined:`, template);
+      throw new Error('The "expected" is undefined');
     }
   }
 
