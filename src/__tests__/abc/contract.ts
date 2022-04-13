@@ -3,13 +3,12 @@ export interface IEntryTest {
   useClass?: any;
   useFactory?: any;
   deps?: any;
-  useValue?: any;
   multi?: any;
   expected?: any;
 }
 
 export interface IEntityTest {
-  base?: any;
+  provide?: any;
   deps?: any;
-  value?: any;
+  useValue?: any;
 }

@@ -3,18 +3,19 @@ import {Entry} from './entry'
 
 export class Registry {
 
-  private map = new Map<any, Entry[]>();
+  private entries = new Map<any, Entry[]>();
+  private entities = new Map<any, Entry[]>();
 
   get size(): number {
-    return this.map.size;
+    return this.entries.size;
   }
 
   has(provide: any): boolean {
-    return this.map.has(provide);
+    return this.entries.has(provide);
   }
 
   get<TProvide>(provide: TProvide): Entry[] | undefined {
-    const entries = this.map.get(provide);
+    const entries = this.entries.get(provide);
     return Array.isArray(entries) ? [...entries] : undefined;
   }
 
@@ -23,7 +24,7 @@ export class Registry {
     const {provide, multi} = entry;
     const existedEntries = this.get(provide);
     if (!existedEntries) {
-      this.map.set(provide, [entry]);
+      this.entries.set(provide, [entry]);
       return;
     }
     if (multi) {
@@ -39,14 +40,14 @@ export class Registry {
       }
 // TODO set.test.ts: `multi. add one more, useValue`
       existedEntries.push(entry);
-      this.map.set(provide, existedEntries);
+      this.entries.set(provide, existedEntries);
       return;
     }
     // for multi: false
     switch (existedEntries.length) {
       case 0:
         console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.orig);
-        this.map.set(provide, [entry]);
+        this.entries.set(provide, [entry]);
         return;
 // TODO set.test.ts: `noMulti. existed.length === 1, replace existed useValue #2`
       case 1:
@@ -60,7 +61,7 @@ export class Registry {
           return;
         }
         console.warn(`The existing entry has been replaced with:`, entry.orig);
-        this.map.set(provide, [entry]);
+        this.entries.set(provide, [entry]);
         return;
       default:
         console.error(`The registry contains several "multi" entries, but the new entry goes without the "multi" flag. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));
