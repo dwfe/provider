@@ -6,10 +6,11 @@ import {IEntry} from './contract'
  *
  * Entry types:
  *
- *  1. Generator of Value
- *      { provide, useClass?, useFactory?, deps?, multi? }
+ *  1. Value creator:
+ *      class-instance = { provide, useClass?, deps?, multi? }
+ *      factory-result = { provide, useFactory?, deps?, multi? }
  *
- *  2. Value
+ *  2. Ready value:
  *     { provide, useValue, multi? }
  *
  */
@@ -30,34 +31,34 @@ export class Entry implements IEntry {
      * Normalization & Validation
      */
     if (provide == null) { // null, undefined
-      console.error(`Incorrect "provide":`, data);
-      throw new Error(`Incorrect "provide"`);
+      console.error('Incorrect "provide":', data);
+      throw new Error('Incorrect "provide"');
     }
     if (isPrimitive(provide)
       && useClass === undefined
       && useFactory === undefined
       && useValue === undefined) {
-      console.error(`If "provide" is a primitive, then one of the following must be set: useClass, useFactory, useValue.`, data);
-      throw new Error(`Incorrect entry when "provide" is a primitive`);
+      console.error('If "provide" is a primitive, then one of the following must be set: useClass, useFactory, useValue.', data);
+      throw new Error('Incorrect entry when "provide" is a primitive');
     }
     this.provide = provide;
 
     if (useValue === undefined) {
       if (!!useClass && !!useFactory) {
-        console.error(`At the same time, you can set either "useClass" or "useFactory":`, data);
-        throw new Error(`Only one: "useClass" or "useFactory"`);
+        console.error('At the same time, you can set either "useClass" or "useFactory":', data);
+        throw new Error('Only one: "useClass" or "useFactory"');
       }
       if (useFactory) {
         if (typeof useFactory !== 'function') {
-          console.error(`"useFactory" must be a function:`, data);
-          throw new Error(`Incorrect "useFactory"`);
+          console.error('"useFactory" must be a function:', data);
+          throw new Error('Incorrect "useFactory"');
         }
         this.useFactory = useFactory;
         this.result = 'factory-result';
       } else {
         if (!!useClass && typeof useClass !== 'function') {
-          console.error(`Incorrect "useClass":`, data);
-          throw new Error(`Incorrect "useClass"`);
+          console.error('Incorrect "useClass":', data);
+          throw new Error('Incorrect "useClass"');
         }
         this.useClass = useClass;
         if (!this.useClass && isFunction(this.provide))
@@ -66,8 +67,8 @@ export class Entry implements IEntry {
       }
 
       if (deps === null || !!deps && !Array.isArray(deps)) {
-        console.error(`Incorrect "deps":`, data);
-        throw new Error(`Incorrect "deps"`);
+        console.error('Incorrect "deps":', data);
+        throw new Error('Incorrect "deps"');
       }
       this.deps = deps;
       if (!!deps && deps.length === 0)

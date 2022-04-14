@@ -1,8 +1,8 @@
 import {describe, expect} from '@jest/globals';
 import {Entry, IEntry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
-import {User} from '../abc/user';
 import {getLang} from '../abc/get-lang';
+import {User} from '../abc/user';
 
 //region Support
 
@@ -15,9 +15,9 @@ function check(dto: IEntry, props: Array<keyof IEntry>) {
 
 //endregion Support
 
-describe(`Entry.get-orig`, () => {
+describe('Entry.get-orig', () => {
 
-  test(`class instance provided`, () => {
+  test('class instance provided', () => {
     check(
       {provide: Duck},
       ['provide', 'useClass']);
@@ -25,29 +25,41 @@ describe(`Entry.get-orig`, () => {
       {provide: Duck, useClass: Duck},
       ['provide', 'useClass']);
     check(
+      {provide: Duck, useClass: Duck, deps: []},
+      ['provide', 'useClass']);
+    check(
       {provide: Duck, useClass: Duck, deps: ['quack!']},
       ['provide', 'useClass', 'deps']);
   });
 
-  test(`factory result provided`, () => {
+  test('factory result provided', () => {
+    check(
+      {provide: 'lang', useFactory: getLang},
+      ['provide', 'useFactory']);
+    check(
+      {provide: 'lang', useFactory: getLang, deps: []},
+      ['provide', 'useFactory']);
     check(
       {provide: 'lang', useFactory: getLang, deps: [User]},
       ['provide', 'useFactory', 'deps']);
   });
 
-  test(`value provided`, () => {
+  test('value provided', () => {
     check(
       {provide: Duck, useValue: 123},
       ['provide', 'useValue']);
     check(
       {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123},
-      ['provide', 'useValue', 'deps']);
+      ['provide', 'useValue']);
   });
 
-  test(`multiple provided`, () => {
+  test('multiple provided', () => {
     check(
       {provide: 'Bird', useClass: Duck, multi: true},
       ['provide', 'useClass', 'multi']);
+    check(
+      {provide: 'Bird', useFactory: getLang, multi: true},
+      ['provide', 'useFactory', 'multi']);
     check(
       {provide: 'Bird', useValue: 'Eagle', multi: true},
       ['provide', 'useValue', 'multi']);

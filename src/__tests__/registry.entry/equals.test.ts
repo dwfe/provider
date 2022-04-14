@@ -1,8 +1,8 @@
 import {describe, expect} from '@jest/globals';
 import {Entry, IEntry} from '../../registry'
 import {Duck, Turkey} from '../abc/bird'
-import {User} from '../abc/user';
 import {getLang} from '../abc/get-lang';
+import {User} from '../abc/user';
 
 //region Support
 
@@ -16,9 +16,9 @@ function falsy(a: IEntry, b = {...a}) {
 
 //endregion Support
 
-describe(`Entry.equals`, () => {
+describe('Entry.equals', () => {
 
-  test(`class instance provided`, () => {
+  test('class instance provided', () => {
     truthy({provide: Duck});
     truthy({provide: Duck, useClass: Duck});
     truthy({provide: Duck}, {provide: Duck, useClass: Duck});
@@ -26,6 +26,9 @@ describe(`Entry.equals`, () => {
     truthy({provide: Duck, useClass: Duck, deps: []});
     truthy({provide: Duck, useClass: Duck, deps: [null, User]});
     truthy({provide: Turkey, useClass: Duck, deps: ['ololo!']});
+    truthy(
+      {provide: Turkey, useClass: Duck},
+      {provide: Turkey, useClass: Duck, deps: []});
     falsy(
       {provide: Duck},
       {provide: Turkey});
@@ -43,19 +46,27 @@ describe(`Entry.equals`, () => {
       {provide: Duck, useClass: Duck, deps: ['quack!']});
   });
 
-  test(`factory result provided`, () => {
+  test('factory result provided', () => {
     truthy({provide: 'lang', useFactory: getLang, deps: [User]});
+    falsy(
+      {provide: 'lang', useFactory: getLang, deps: [User]},
+      {provide: 'lang', useFactory: getLang});
     falsy(
       {provide: 'lang', useFactory: () => true, deps: [User]},
       {provide: 'lang', useFactory: () => true, deps: [User]}
     )
   });
 
-  test(`value provided`, () => {
+  test('value provided', () => {
     truthy({provide: Duck, useValue: 123});
-    truthy({provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123});
+    truthy(
+      {provide: Turkey, useClass: Turkey, useFactory: getLang, deps: ['ololo!'], useValue: 123},
+      {provide: Turkey, useValue: 123});
     falsy(
       {provide: Duck},
+      {provide: Duck, useValue: 123});
+    falsy(
+      {provide: Duck, useFactory: getLang},
       {provide: Duck, useValue: 123});
     falsy(
       {provide: Duck, useValue: null},
@@ -65,13 +76,13 @@ describe(`Entry.equals`, () => {
       {provide: Turkey, useValue: User});
   });
 
-  test(`multiple provided`, () => {
+  test('multiple provided', () => {
     truthy({provide: 'Bird', useClass: Duck, multi: true});
     truthy({provide: 'Bird', useValue: 'Eagle', multi: true});
     falsy(
       {provide: 'Bird', useClass: Duck},
       {provide: 'Bird', useClass: Duck, multi: true});
-    falsy(
+    truthy(
       {provide: 'Bird', useClass: Duck, multi: true},
       {provide: 'Bird', useClass: Duck, multi: true, deps: []});
     falsy(

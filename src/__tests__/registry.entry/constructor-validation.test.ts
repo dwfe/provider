@@ -2,8 +2,8 @@ import {describe, expect} from '@jest/globals';
 import {Entry, IEntry} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
-import {User} from '../abc/user'
 import {getLang} from '../abc/get-lang';
+import {User} from '../abc/user'
 
 //region Support
 
@@ -24,12 +24,12 @@ function noThrow(dto: IEntryTest) {
 
 //endregion Support
 
-describe(`Entry.constructor, incorrect use`, () => {
+describe('Entry.constructor, incorrect use', () => {
 
-  test(`incorrect provide`, () => {
-    toThrow({}, 'Empty provide');
-    toThrow({provide: null}, 'Empty provide');
-    toThrow({provide: 'Bird'}, 'Incorrect entry with primitive type of provide');
+  test('incorrect provide', () => {
+    toThrow({}, 'Incorrect "provide"');
+    toThrow({provide: null}, 'Incorrect "provide"');
+    toThrow({provide: 'Bird'}, 'Incorrect entry when "provide" is a primitive');
     noThrow({provide: false, useClass: Duck});
     noThrow({provide: true, useFactory: getLang});
     noThrow({provide: 123, useClass: Duck});
@@ -38,21 +38,21 @@ describe(`Entry.constructor, incorrect use`, () => {
     noThrow({provide: Symbol(), useValue: 'en'});
   });
 
-  test(`useClass or useFactory`, () => {
-    toThrow({provide: Duck, useClass: Duck, useFactory: getLang}, 'useClass or useFactory');
+  test('only one: useClass or useFactory', () => {
+    toThrow({provide: Duck, useClass: Duck, useFactory: getLang}, 'Only one: "useClass" or "useFactory"');
   });
 
-  test(`incorrect useClass`, () => {
-    toThrow({provide: Duck, useClass: 123}, 'Incorrect useClass');
+  test('incorrect useFactory', () => {
+    toThrow({provide: Duck, useFactory: 123}, 'Incorrect "useFactory"');
   });
 
-  test(`incorrect useFactory`, () => {
-    toThrow({provide: Duck, useFactory: 123}, 'Incorrect useFactory');
+  test('incorrect useClass', () => {
+    toThrow({provide: Duck, useClass: 123}, 'Incorrect "useClass"');
   });
 
-  test(`incorrect deps`, () => {
-    toThrow({provide: Duck, deps: null}, 'Incorrect deps');
-    toThrow({provide: Duck, deps: 123}, 'Incorrect deps');
+  test('incorrect deps', () => {
+    toThrow({provide: Duck, deps: null}, 'Incorrect "deps"');
+    toThrow({provide: Duck, deps: 123}, 'Incorrect "deps"');
     noThrow({provide: Duck, deps: []});
     noThrow({provide: Duck, deps: [123]});
     noThrow({provide: Duck, deps: [User, 123]});
