@@ -5,11 +5,5 @@ export interface IEntryTest {
   deps?: any;
   useValue?: any;
   multi?: any;
-  expected?: any;
-}
-
-export interface IEntityTest {
-  base?: any;
-  deps?: any;
-  value?: any;
+  result?: any;
 }

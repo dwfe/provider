@@ -4,6 +4,7 @@ import {Entry, IEntry} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {User} from '../abc/user'
+import {getLang} from '../abc/get-lang';
 
 //region Support
 
@@ -15,10 +16,8 @@ function check(dto: IEntry, test: IEntryTest) {
   expect(arraysEqualFailCheck(entry.deps, test.deps)).toBe(true);
   expect(entry.useValue).toBe(test.useValue);
   expect(entry.multi).toBe(test.multi);
-  expect(entry.expected).toBe(test.expected);
+  expect(entry.result).toBe(test.result);
 }
-
-export const getLang = (user: User) => user?.lang || 'en';
 
 //endregion Support
 
