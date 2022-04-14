@@ -1,10 +1,12 @@
 import {describe, expect} from '@jest/globals';
-import {Registry} from '../../registry';
+import {L10nService} from '../abc/l10n.service'
 import {Duck, Turkey} from '../abc/bird';
+import {Registry} from '../../registry';
+import {User} from '../abc/user'
 
-describe(`Registry.get .has`, () => {
+describe('Registry.get .has', () => {
 
-  test(`no entry`, () => {
+  test('no entry', () => {
     const registry = new Registry();
     expect(registry.has(Duck)).toBe(false);
     expect(registry.get(Duck)).toBe(undefined);
@@ -21,18 +23,20 @@ describe(`Registry.get .has`, () => {
     expect(registry.get(Turkey)).toBe(undefined);
   });
 
-  test(`entry exists`, () => {
+  test('entry exists', () => {
     const registry = new Registry();
     registry.set({provide: Duck});
     let result = registry.get(Duck);
     expect(Array.isArray(result) && result.length === 1).toBe(true);
+    expect(registry.size).toBe(1);
 
     registry.set({provide: 123, useClass: Duck});
     result = registry.get(123);
     expect(Array.isArray(result) && result.length === 1).toBe(true);
+    expect(registry.size).toBe(2);
   });
 
-  test(`clone result arr`, () => {
+  test('clone result arr', () => {
     const registry = new Registry();
     registry.set({provide: Duck});
     const result1 = registry.get(Duck);
@@ -40,6 +44,20 @@ describe(`Registry.get .has`, () => {
     expect(Array.isArray(result1)).toBe(true);
     expect(Array.isArray(result2)).toBe(true);
     expect(result1 === result2).toBe(false);
+  });
+
+  test('second level filter [by deps]', () => {
+    const registry = new Registry();
+    registry.set({provide: Duck, multi: true});
+    registry.set({provide: Duck, deps: [User], multi: true});
+    registry.set({provide: Duck, deps: [123, L10nService], multi: true});
+
+    expect(registry.get(Duck)?.length).toBe(3);
+    expect(registry.get(Duck, [User])?.length).toBe(1);
+    expect(registry.get(Duck, [123])?.length).toBe(undefined);
+    expect(registry.get(Duck, [123, L10nService])?.length).toBe(1);
+    expect(registry.get(Duck, [L10nService, 123])?.length).toBe(undefined);
+    expect(registry.get(Duck, ['hello'])?.length).toBe(undefined);
   });
 
 });

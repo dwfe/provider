@@ -4,7 +4,7 @@ import {IEntry} from './contract'
 
 /**
  *
- * Entry types:
+ * Entry result types:
  *
  *  1. Value creator:
  *      class-instance = { provide, useClass?, deps?, multi? }
