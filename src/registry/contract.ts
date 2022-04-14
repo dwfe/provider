@@ -1,10 +1,10 @@
 import {Type} from '@do-while-for-each/common'
 
-export interface IEntry<TProvide = any> {
-  provide: TProvide;
+export interface IEntry {
+  provide: any;
   useClass?: Type<any>;
   useFactory?: Function;
   useValue?: any;
-  deps?: any;
+  deps?: any[];
   multi?: boolean;
 }
