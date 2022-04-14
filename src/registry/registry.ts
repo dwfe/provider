@@ -1,71 +1,77 @@
 import {IEntry} from './contract'
 import {Entry} from './entry'
+import {arraysEqualStrictCheck} from '../util';
 
 export class Registry {
 
-  private map = new Map<any, Entry[]>();
+  private store = new Map<any, Entry[]>();
 
   get size(): number {
-    return this.map.size;
+    return this.store.size;
   }
 
   has(provide: any): boolean {
-    return this.map.has(provide);
+    return this.store.has(provide);
   }
 
-  get<TProvide>(provide: TProvide): Entry[] | undefined {
-    const entries = this.map.get(provide);
-    return Array.isArray(entries) ? [...entries] : undefined;
+  /**
+   * @param provide - First level filter
+   * @param deps - Second level filter
+   * @return Non-empty array | undefined
+   */
+  get(provide: any, deps?: any[]): Entry[] | undefined {
+    let entries = this.store.get(provide); // 1
+    if (!entries || entries.length === 0)
+      return;
+    entries = [...entries];
+    if (deps && deps.length > 0) { // 2
+      const result = entries.filter(x => arraysEqualStrictCheck(x.deps, deps));
+      return result.length ? result : undefined;
+    }
+    return entries;
   }
 
   set(data: Entry | IEntry): void {
     const entry = data instanceof Entry ? data : new Entry(data);
     const {provide, multi} = entry;
-    const existedEntries = this.get(provide);
-    if (!existedEntries) {
-      this.map.set(provide, [entry]);
+    const existedArr = this.get(provide);
+    if (!existedArr) {
+      this.store.set(provide, [entry]);
       return;
     }
     if (multi) {
-      const hasWrongMulti = existedEntries.some(x => !x.multi);
+      const hasWrongMulti = existedArr.some(x => !x.multi);
       if (hasWrongMulti) {
-        console.error(`In existing entries there is an entry with flag "multi" set to false. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));
+        console.error(`There is a non-multi entry in existing, but new is multi. New:`, entry.orig, `Existed:`, existedArr.map(x => x.orig));
         throw new Error(`All existing entries for this "provide" must have flag "multi" set to true`);
       }
-      const isDuplicate = existedEntries.some(x => x.equals(entry));
-      if (isDuplicate) {
-        console.warn(`Prevented an attempt to add a duplicate to the registry. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));
+      const hasDuplicate = existedArr.some(x => x.equals(entry));
+      if (hasDuplicate) {
+        console.warn(`Prevented an attempt to add a duplicate. New:`, entry.orig, `Existed:`, existedArr.map(x => x.orig));
         return;
       }
-// TODO set.test.ts: `multi. add one more, useValue`
-      existedEntries.push(entry);
-      this.map.set(provide, existedEntries);
+      existedArr.push(entry);
+      this.store.set(provide, existedArr);
       return;
     }
-    // for multi: false
-    switch (existedEntries.length) {
-      case 0:
-        console.warn(`An empty list was returned for the registered entry. The entry is now filled in:`, entry.orig);
-        this.map.set(provide, [entry]);
-        return;
-// TODO set.test.ts: `noMulti. existed.length === 1, replace existed useValue #2`
-      case 1:
-        const existed = existedEntries[0];
-        if (entry.equals(existed)) {
-          console.warn(`Prevented an attempt to replace an existing entry with an identical one. New entry:`, entry.orig);
-          return;
-        }
-        if (existed.multi) {
-          console.warn(`Can't replace existed multi entry new with non-multi. New entry:`, entry.orig, `Existed entry:`, existed.orig);
-          return;
-        }
-        console.warn(`The existing entry has been replaced with:`, entry.orig);
-        this.map.set(provide, [entry]);
-        return;
-      default:
-        console.error(`The registry contains several "multi" entries, but the new entry goes without the "multi" flag. New entry:`, entry.orig, `Existed entries:`, existedEntries.map(x => x.orig));
-        throw new Error(`For this "provide" flag "multi" must be set to true in new entry`);
+    /**
+     * here multi: false
+     */
+    if (existedArr.length > 1) {
+      console.error(`Attempting to add a non-multi entry when more than one entry already exists. New:`, entry.orig, `Existed:`, existedArr.map(x => x.orig));
+      throw new Error(`Attempting to add a non-multi entry when more than one entry already exists`);
     }
+    const existed = existedArr[0];
+    if (existed.multi) {
+      console.warn(`It's not allowed to replace existed multi entry with a new non-multi. New:`, entry.orig, `Existed:`, existed.orig);
+      return;
+    }
+    if (entry.equals(existed)) {
+      console.warn(`Prevented an attempt to replace an existing entry with an identical one. New:`, entry.orig);
+      return;
+    }
+    this.store.set(provide, [entry]);
+    console.warn(`The existing entry has been replaced with a new one:`, entry.orig);
   }
 
 }
