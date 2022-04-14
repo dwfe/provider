@@ -1,9 +1,7 @@
 import {Registry} from '../registry'
-import {Store} from '../store';
 
 export class Provider {
 
-  private store = new Store(); // store of instances e.g. instances of singletons
   private registry = new Registry();
 
   get(provide: any) {
@@ -11,14 +9,12 @@ export class Provider {
     if (!entries)
       return;
     for (const entry of entries) {
-      switch (entry.expected) {
+      switch (entry.result) {
         case 'value':
           return entry.useValue;
-        case 'instance':
-          const instance = new Map();
-          if ('singleton')
-            this.store.set({base: entry.useClass, deps: entry.deps, value: instance});
-          return instance;
+        case 'class-instance':
+
+        // return instance;
         case 'factory-result':
           return (entry.useFactory as Function)();
       }

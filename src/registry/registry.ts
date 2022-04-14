@@ -1,6 +1,6 @@
+import {arraysEqualStrictCheck} from '../util';
 import {IEntry} from './contract'
 import {Entry} from './entry'
-import {arraysEqualStrictCheck} from '../util';
 
 export class Registry {
 
