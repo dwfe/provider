@@ -1,27 +1,35 @@
 import {isPrimitive, Type} from '@do-while-for-each/common'
-import {arraysEqualStrictCheck, isFunction} from '../util'
+import {arraysEqualFailCheck, isFunction} from '../util'
 import {IEntry} from './contract'
 
 /**
+ *
  * Entry types:
- *  Template -> { provide, useClass?, useFactory?, deps?, multi? }
- *  Value    -> { provide, useValue, multi? }
+ *
+ *  1. Generator of Value
+ *      { provide, useClass?, useFactory?, deps?, multi? }
+ *
+ *  2. Value
+ *     { provide, useValue, multi? }
+ *
  */
 export class Entry implements IEntry {
 
-  readonly provide: any;  // !!any
-  readonly useClass?: Type<any>;  // undefined || constructor
-  readonly useFactory?: Function; // undefined || function
-  readonly useValue?: any; // undefined | any
-  readonly deps?: any[]; // undefined | any[]
+  readonly provide: any;  // any except [null, undefined]
+  readonly useClass?: Type<any>;  // constructor
+  readonly useFactory?: Function; // function
+  readonly useValue?: any; // any except [undefined]
+  readonly deps?: any[]; // non-empty any[]
   readonly multi: boolean; // false | true
+
+  readonly result: 'class-instance' | 'factory-result' | 'value';
 
   constructor(data: IEntry) {
     const {provide, useClass, useFactory, useValue, deps, multi} = data;
     /**
      * Normalization & Validation
      */
-    if (provide == null) { // undefined, null
+    if (provide == null) { // null, undefined
       console.error(`Incorrect "provide":`, data);
       throw new Error(`Incorrect "provide"`);
     }
@@ -41,11 +49,12 @@ export class Entry implements IEntry {
       }
       if (useFactory) {
         if (typeof useFactory !== 'function') {
-          console.error(`Incorrect "useFactory":`, data);
+          console.error(`"useFactory" must be a function:`, data);
           throw new Error(`Incorrect "useFactory"`);
         }
         this.useFactory = useFactory;
-      } else { // if (useClass || !useFactory)
+        this.result = 'factory-result';
+      } else {
         if (!!useClass && typeof useClass !== 'function') {
           console.error(`Incorrect "useClass":`, data);
           throw new Error(`Incorrect "useClass"`);
@@ -53,15 +62,19 @@ export class Entry implements IEntry {
         this.useClass = useClass;
         if (!this.useClass && isFunction(this.provide))
           this.useClass = this.provide as unknown as Type<any>;
+        this.result = 'class-instance';
       }
 
       if (deps === null || !!deps && !Array.isArray(deps)) {
         console.error(`Incorrect "deps":`, data);
         throw new Error(`Incorrect "deps"`);
       }
-      this.deps = deps || [];
+      this.deps = deps;
+      if (!!deps && deps.length === 0)
+        this.deps = undefined;
     } else {
       this.useValue = useValue;
+      this.result = 'value';
     }
     this.multi = !!multi || false;
   }
@@ -75,13 +88,13 @@ export class Entry implements IEntry {
       return false;
     if (this.useValue !== useValue)
       return false;
-    if (!arraysEqualStrictCheck(this.deps, deps))
+    if (!arraysEqualFailCheck(this.deps, deps))
       return false;
     return this.multi === multi;
   }
 
   get orig(): IEntry {
-    const {provide, useClass, useFactory, deps, multi, useValue} = this;
+    const {provide, useClass, useFactory, useValue, deps, multi} = this;
     const result: IEntry = {
       provide,
     };
