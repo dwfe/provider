@@ -42,12 +42,12 @@ export class Registry {
     if (multi) {
       const hasWrongMulti = existedArr.some(x => !x.multi);
       if (hasWrongMulti) {
-        console.error(`There is a non-multi entry in existing, but new is multi. New:`, entry.orig, `Existed:`, existedArr.map(x => x.orig));
-        throw new Error(`All existing entries for this "provide" must have flag "multi" set to true`);
+        console.error('There is a non-multi entry in existing, but new is multi. New:', entry.orig, 'Existed:', existedArr.map(x => x.orig));
+        throw new Error('All existing entries for this "provide" must have flag "multi" set to true');
       }
       const hasDuplicate = existedArr.some(x => x.equals(entry));
       if (hasDuplicate) {
-        console.warn(`Prevented an attempt to add a duplicate. New:`, entry.orig, `Existed:`, existedArr.map(x => x.orig));
+        console.warn('Prevented an attempt to add a duplicate. New:', entry.orig, 'Existed:', existedArr.map(x => x.orig));
         return;
       }
       existedArr.push(entry);
@@ -58,20 +58,20 @@ export class Registry {
      * here multi: false
      */
     if (existedArr.length > 1) {
-      console.error(`Attempting to add a non-multi entry when more than one entry already exists. New:`, entry.orig, `Existed:`, existedArr.map(x => x.orig));
-      throw new Error(`Attempting to add a non-multi entry when more than one entry already exists`);
+      console.error('Attempting to add a non-multi entry when more than one entry already exists. New:', entry.orig, 'Existed:', existedArr.map(x => x.orig));
+      throw new Error('Attempting to add a non-multi entry when more than one entry already exists');
     }
     const existed = existedArr[0];
     if (existed.multi) {
-      console.warn(`It's not allowed to replace existed multi entry with a new non-multi. New:`, entry.orig, `Existed:`, existed.orig);
+      console.warn(`It's not allowed to replace existed multi entry with a new non-multi. New:`, entry.orig, 'Existed:', existed.orig);
       return;
     }
     if (entry.equals(existed)) {
-      console.warn(`Prevented an attempt to replace an existing entry with an identical one. New:`, entry.orig);
+      console.warn('Prevented an attempt to replace an existing entry with an identical one. New:', entry.orig);
       return;
     }
     this.store.set(provide, [entry]);
-    console.warn(`The existing entry has been replaced with a new one:`, entry.orig);
+    console.warn('The existing entry has been replaced with a new one:', entry.orig);
   }
 
 }
