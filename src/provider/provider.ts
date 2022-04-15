@@ -56,7 +56,7 @@ export class Provider {
     }
     switch (result.length) {
       case 0:
-        return undefined;
+        return;
       case 1:
         return result[0];
       default:
