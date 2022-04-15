@@ -6,7 +6,7 @@ export class Provider {
 
   private registry = new Registry();
 
-  constructor(public readonly id = 'root') {
+  constructor(public readonly id = 'global') {
   }
 
   static of(data: IEntry[] = [], id?: string): Provider {
@@ -71,3 +71,8 @@ export class Provider {
   }
 
 }
+
+const globalProvider = new Provider();
+export {
+  globalProvider
+};

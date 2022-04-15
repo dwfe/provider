@@ -13,6 +13,7 @@
   "keywords": [
     "instances provider",
     "instances container",
+    "dependency container",
     "dependency injection",
     "dependency inversion",
     "di"
@@ -35,8 +36,8 @@
     "deploy": "npm version patch && npm publish"
   },
   "dependencies": {
-    "@do-while-for-each/common": "^1.2.7",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "0.1.x",
+    "@do-while-for-each/common": "^1.2.7"
   },
   "devDependencies": {
     "@do-while-for-each/tsconfig": "^1.0.3",
