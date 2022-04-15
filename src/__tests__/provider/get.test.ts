@@ -7,11 +7,11 @@ describe('Provider.get', () => {
 
   test('primitive can be result', () => {
     const provider = new Provider();
-    provider.set(
+    provider.register(
       {provide: User, deps: [L10nService, 'Naruto']},
       {provide: L10nService, deps: ['ja']},
     );
-    const user = provider.single<User>(User);
+    const user = provider.getOnlyOne<User>(User);
     expect(user).toBeTruthy();
     expect(user.l10nService).not.toBe(undefined);
     expect(user).toHaveProperty('lang', 'ja');

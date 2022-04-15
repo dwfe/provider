@@ -6,24 +6,21 @@ export class Provider {
 
   private registry = new Registry();
 
-  set(...data: IEntry[]): void {
+  register(...data: IEntry[]): void {
     for (const entry of data)
       this.registry.set(entry);
   }
 
-  /**
-   * Get a result guaranteed to consist of a single value.
-   */
-  single<TResult = any>(provide: any, opt: IProviderGetOpt = {}): TResult {
-    const result = this.get<TResult>(provide, opt);
-    if (result === undefined || Array.isArray(result)) {
-      console.error('provide:', provide, 'The result is not a single one:', result);
-      throw new Error('The result is not a single one');
+  getOnlyOne<TValue = any>(provide: any, opt: IProviderGetOpt = {}): TValue {
+    const value = this.getAll<TValue>(provide, opt);
+    if (value === undefined || Array.isArray(value)) {
+      console.error('provide:', provide, 'The value is not the only one:', value);
+      throw new Error('The value is not the only one');
     }
-    return result;
+    return value;
   }
 
-  get<TResult = any>(provide: any, opt: IProviderGetOpt = {}): TResult | TResult[] | undefined {
+  getAll<TValue = any>(provide: any, opt: IProviderGetOpt = {}): TValue | TValue[] | undefined {
     const entries = this.registry.get(provide, opt.deps);
     if (!entries) {
       if (opt.primitiveCanBeResult && isPrimitive(provide))
@@ -31,7 +28,7 @@ export class Provider {
       console.warn('provide:', provide, `Missing from the provider's registry`);
       return;
     }
-    const result = [];
+    const result: TValue[] = [];
     for (const entry of entries) {
       if (entry.result === 'value')
         return entry.useValue;
@@ -40,15 +37,15 @@ export class Provider {
       if (deps.length) {
         // TODO взять из metadata
         deps = deps.map(x =>
-          this.get(x, {primitiveCanBeResult: true})
+          this.getAll(x, {primitiveCanBeResult: true})
         );
       }
       switch (entry.result) {
         case 'class-instance':
-          result.push(new (entry.useClass as any)(...deps) as TResult);
+          result.push(new (entry.useClass as any)(...deps) as TValue);
           break;
         case 'factory-result':
-          result.push((entry.useFactory as Function)(...deps) as TResult);
+          result.push((entry.useFactory as Function)(...deps) as TValue);
           break;
         default:
           throw new Error(`Unknown entry result "${entry.result}"`);
