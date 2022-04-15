@@ -1,22 +1,33 @@
-import {Registry} from '../registry'
+import {isPrimitive} from '@do-while-for-each/common';
+import {IEntry, Registry} from '../registry'
+import {IProviderGetOpt} from './contract';
 
 export class Provider {
 
   private registry = new Registry();
 
-  get<TResult = any>(provide: any, deps?: any[]): TResult | TResult[] | undefined {
-    const entries = this.registry.get(provide, deps);
-    if (!entries)
+  set(data: IEntry): void {
+    this.registry.set(data);
+  }
+
+  get<TResult = any>(provide: any, opt: IProviderGetOpt = {}): TResult | TResult[] | undefined {
+    const entries = this.registry.get(provide, opt.deps);
+    if (!entries) {
+      if (opt.primitiveCanBeResult && isPrimitive(provide))
+        return provide;
       return;
+    }
     const result = [];
     for (const entry of entries) {
       if (entry.result === 'value')
         return entry.useValue;
 
-      let deps: any[] = [];
-      if (!entry.deps) {
+      let deps: any[] = entry.deps || [];
+      if (deps.length) {
         // TODO взять из metadata
-        deps = deps.map(x => this.get(x));
+        deps = deps.map(x =>
+          this.get(x, {primitiveCanBeResult: true})
+        );
       }
       switch (entry.result) {
         case 'class-instance':

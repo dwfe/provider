@@ -25,6 +25,7 @@
     "README.md"
   ],
   "scripts": {
+    "manual": "node manual.js",
     "clean": "dwfeFs cleanDir . --noConfirm --fileNames=\"dist;node_modules;package-lock.json\"",
     "build": "dwfeFs rmForce dist --noConfirm && tsc -b src/tsconfig.json",
     "types": "tsc -b config/tsconfig.types.json",
@@ -34,11 +35,11 @@
     "deploy": "npm version patch && npm publish"
   },
   "dependencies": {
+    "@do-while-for-each/common": "^1.2.7",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@do-while-for-each/tsconfig": "^1.0.3",
-    "@do-while-for-each/common": "^1.2.7",
     "@types/jest": "27.x.x",
     "jest": "27.x.x",
     "ts-jest": "27.x.x"
