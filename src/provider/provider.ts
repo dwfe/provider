@@ -6,13 +6,13 @@ export class Provider {
 
   private registry = new Registry();
 
+  constructor(public readonly id = 'root') {
+  }
+
   static of(data: IEntry[] = [], id?: string): Provider {
     const provider = new Provider(id);
     provider.register(...data);
     return provider;
-  }
-
-  constructor(public readonly id = 'root') {
   }
 
   register(...data: IEntry[]): void {
