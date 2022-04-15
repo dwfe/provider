@@ -6,8 +6,21 @@ export class Provider {
 
   private registry = new Registry();
 
-  set(data: IEntry): void {
-    this.registry.set(data);
+  set(...data: IEntry[]): void {
+    for (const entry of data)
+      this.registry.set(entry);
+  }
+
+  /**
+   * Get a result guaranteed to consist of a single value.
+   */
+  single<TResult = any>(provide: any, opt: IProviderGetOpt = {}): TResult {
+    const result = this.get<TResult>(provide, opt);
+    if (result === undefined || Array.isArray(result)) {
+      console.error('provide:', provide, 'The result is not a single one:', result);
+      throw new Error('The result is not a single one');
+    }
+    return result;
   }
 
   get<TResult = any>(provide: any, opt: IProviderGetOpt = {}): TResult | TResult[] | undefined {
@@ -15,6 +28,7 @@ export class Provider {
     if (!entries) {
       if (opt.primitiveCanBeResult && isPrimitive(provide))
         return provide;
+      console.warn('provide:', provide, `Missing from the provider's registry`);
       return;
     }
     const result = [];

@@ -7,13 +7,15 @@ describe('Provider.get', () => {
 
   test('primitive can be result', () => {
     const provider = new Provider();
-    provider.set({provide: L10nService, deps:['jp']});
-    provider.set({provide: User, deps: [L10nService, 'John']});
-
-    const user = provider.get<User>(User) as User;
+    provider.set(
+      {provide: User, deps: [L10nService, 'Naruto']},
+      {provide: L10nService, deps: ['ja']},
+    );
+    const user = provider.single<User>(User);
+    expect(user).toBeTruthy();
     expect(user.l10nService).not.toBe(undefined);
-    expect(user).toHaveProperty('lang', 'jp');
-    expect(user).toHaveProperty('name', 'John');
+    expect(user).toHaveProperty('lang', 'ja');
+    expect(user).toHaveProperty('name', 'Naruto');
   });
 
   test('', () => {
