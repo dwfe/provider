@@ -6,11 +6,10 @@ import {User} from '../abc/user';
 describe('Provider.get', () => {
 
   test('primitive can be result', () => {
-    const provider = new Provider();
-    provider.register(
+    const provider = Provider.of([
       {provide: User, deps: [L10nService, 'Naruto']},
-      {provide: L10nService, deps: ['ja']},
-    );
+      {provide: L10nService, deps: ['ja']}
+    ]);
     const user = provider.getOnlyOne<User>(User);
     expect(user).toBeTruthy();
     expect(user.l10nService).not.toBe(undefined);

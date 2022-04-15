@@ -6,6 +6,15 @@ export class Provider {
 
   private registry = new Registry();
 
+  static of(data: IEntry[] = [], id?: string): Provider {
+    const provider = new Provider(id);
+    provider.register(...data);
+    return provider;
+  }
+
+  constructor(public readonly id = 'root') {
+  }
+
   register(...data: IEntry[]): void {
     for (const entry of data)
       this.registry.set(entry);
