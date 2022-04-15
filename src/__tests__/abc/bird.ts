@@ -19,3 +19,11 @@ export class Turkey implements IBird {
     return this.message;
   }
 }
+
+export class BirdAviary {
+  birds: IBird[];
+
+  constructor(...birds: IBird[]) {
+    this.birds = birds;
+  }
+}

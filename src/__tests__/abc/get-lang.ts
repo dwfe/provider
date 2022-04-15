@@ -1,3 +1,3 @@
 import {User} from './user';
 
-export const getLang = (user: User) => user?.lang || 'en';
+export const getLang = (user: User): string => user?.lang || 'en';
