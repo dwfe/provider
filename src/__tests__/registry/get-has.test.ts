@@ -1,7 +1,9 @@
 import {describe, expect} from '@jest/globals';
+import {checkCloned} from '../registry.entry/clone.test';
 import {L10nService} from '../abc/l10n.service'
+import {Entry, Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
-import {Registry} from '../../registry';
+import {getEntry} from './set.test';
 import {User} from '../abc/user'
 
 describe('Registry.get .has', () => {
@@ -58,6 +60,16 @@ describe('Registry.get .has', () => {
     expect(registry.get(Duck, [123, L10nService])?.length).toBe(1);
     expect(registry.get(Duck, [L10nService, 123])?.length).toBe(undefined);
     expect(registry.get(Duck, ['hello'])?.length).toBe(undefined);
+  });
+
+  test('entry must be cloned', () => {
+    const registry = new Registry();
+    registry.set({provide: Duck, deps: [Turkey, User]});
+    getEntry(registry, Duck);
+
+    const entry = registry['store'].get(Duck)?.[0] as Entry;
+    const cloned = registry.get(Duck)?.[0] as Entry;
+    checkCloned(entry, cloned);
   });
 
 });

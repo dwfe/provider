@@ -23,12 +23,9 @@ export class Registry {
     let entries = this.store.get(provide); // 1
     if (!entries || entries.length === 0)
       return;
-    entries = [...entries];
-    if (deps && deps.length > 0) { // 2
-      const result = entries.filter(x => arraysEqualStrictCheck(x.deps, deps));
-      return result.length ? result : undefined;
-    }
-    return entries;
+    if (deps && deps.length > 0) // 2
+      entries = entries.filter(x => arraysEqualStrictCheck(x.deps, deps));
+    return entries.length ? entries.map(x => x.clone()) : undefined;
   }
 
   set(data: Entry | IEntry): void {

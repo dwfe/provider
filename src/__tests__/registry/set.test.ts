@@ -7,7 +7,7 @@ import {User} from '../abc/user';
 
 //region Support
 
-function getEntry(registry: Registry, provide: any): Entry {
+export function getEntry(registry: Registry, provide: any): Entry {
   const result = registry.get(provide) as Array<any>
   expect(Array.isArray(result) && result.length === 1).toBe(true);
   const entry = result[0];
@@ -159,7 +159,7 @@ describe('Registry.set', () => {
     registry.set({provide: Duck});
     const entry2 = getEntry(registry, Duck);
 
-    expect(entry1 === entry2).toBe(true);
+    expect(entry1.equals(entry2)).toBe(true);
     expect(registry.size).toBe(1);
 
     registry.set({provide: Duck, useValue: 123});
@@ -168,7 +168,7 @@ describe('Registry.set', () => {
     registry.set({provide: Duck, useValue: 123});
     const entry4 = getEntry(registry, Duck);
 
-    expect(entry3 === entry4).toBe(true);
+    expect(entry3.equals(entry4)).toBe(true);
     expect(registry.size).toBe(1);
   });
 
@@ -184,7 +184,7 @@ describe('Registry.set', () => {
     const entry2 = getEntry(registry, Duck);
 
     expect(entry2.multi).toBe(true);
-    expect(entry1 === entry2).toBe(true);
+    expect(entry1.equals(entry2)).toBe(true);
     expect(registry.size).toBe(1);
   });
 

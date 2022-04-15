@@ -94,6 +94,13 @@ export class Entry implements IEntry {
     return this.multi === multi;
   }
 
+  clone(): Entry {
+    return new Entry({
+      ...this,
+      deps: this.deps ? [...this.deps] : this.deps,
+    })
+  }
+
   get orig(): IEntry {
     const {provide, useClass, useFactory, useValue, deps, multi} = this;
     const result: IEntry = {
