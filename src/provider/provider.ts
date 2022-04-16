@@ -21,7 +21,7 @@ export class Provider {
       this.registry.set(entry);
   }
 
-  private autoRegister(provide: any): void {
+  private registerByMetadata(provide: any): void {
     if (this.registry.has(provide))
       return;
     const {designParamtypes, providerMetadata} = getMetadata(provide);
@@ -30,18 +30,19 @@ export class Provider {
       /**
        * E.g. with decorator use:
        *   @injectable class A{constructor(public: name: string){}}
+       * dep for prop "name" will have the value: String.
+       * Bad idea to put it to the registry.
        */
       if (isPrimitiveTypeWrapper(dep)) {
         deps.push(dep);
         continue;
       }
       if (!this.registry.get(dep, getMetadata(dep).designParamtypes))
-        this.autoRegister(dep);
+        this.registerByMetadata(dep);
       deps.push(dep);
     }
     if (providerMetadata.isOnlyOne) {
-      const depsValues = this.getDepsValues(deps);
-      this.register({provide, useValue: new provide(...depsValues)});
+      this.register({provide, useValue: new provide(...this.valuesByDeps(deps))});
     } else {
       this.register({provide, useClass: provide, deps});
     }
@@ -61,7 +62,7 @@ export class Provider {
 
     if (!entries) {
       if (!isPrimitive(provide)) {
-        this.autoRegister(provide);
+        this.registerByMetadata(provide);
         return this.getAll(provide, deps);
       }
       console.warn('provide:', provide, `Missing from the provider's registry`);
@@ -70,17 +71,18 @@ export class Provider {
 
     const result: TValue[] = [];
     for (const entry of entries) {
+
       if (entry.result === 'value')
         return entry.useValue;
 
       const deps = entry.deps || [];
-      const depsValues = deps.length ? this.getDepsValues(deps) : [];
+      const valuesByDeps = deps.length ? this.valuesByDeps(deps) : [];
       switch (entry.result) {
         case 'class-instance':
-          result.push(new (entry.useClass as any)(...depsValues) as TValue);
+          result.push(new (entry.useClass as any)(...valuesByDeps) as TValue);
           break;
         case 'factory-result':
-          result.push((entry.useFactory as Function)(...depsValues) as TValue);
+          result.push((entry.useFactory as Function)(...valuesByDeps) as TValue);
           break;
         default:
           throw new Error(`Unknown entry result "${entry.result}"`);
@@ -96,7 +98,7 @@ export class Provider {
     }
   }
 
-  private getDepsValues(deps: any[]): any[] {
+  private valuesByDeps(deps: any[]): any[] {
     return deps.map(x => {
       /**
        * E.g. with manual registration:

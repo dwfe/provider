@@ -3,6 +3,8 @@ export interface IProviderMetadata {
 }
 
 export interface IAllMetadata {
+  designType: any;
   designParamtypes: any[];
+  designReturntype: any;
   providerMetadata: IProviderMetadata;
 }
