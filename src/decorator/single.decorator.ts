@@ -1,11 +1,11 @@
-import {Type} from '@do-while-for-each/common';
-import {globalProvider} from '../provider'
+import {IProviderMetadata, PROVIDER_METADATA_KEY, ROOT_PROVIDER_ID} from '../provider'
 
-export function single() {
-  return (target: Type<any>) => {
-    const deps = Reflect.getMetadata('design:paramtypes', target); // https://www.typescriptlang.org/tsconfig#emitDecoratorMetadata
-    console.log(``,deps)
-    globalProvider.register({provide: target, useValue: 123});
-    return target;
-  };
+export function single(providerId = ROOT_PROVIDER_ID) {
+  return (target: object) => {
+    const metadata: IProviderMetadata = {
+      providerId,
+      isOnlyOne: true
+    };
+    Reflect.defineMetadata(PROVIDER_METADATA_KEY, metadata, target);
+  }
 }

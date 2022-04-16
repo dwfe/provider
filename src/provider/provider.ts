@@ -1,15 +1,16 @@
-import {isPrimitive} from '@do-while-for-each/common';
+import {guid, isPrimitive} from '@do-while-for-each/common';
 import {IEntry, Registry} from '../registry'
 import {IProviderGetOpt} from './contract';
+import {ROOT_PROVIDER_ID} from './index'
 
 export class Provider {
 
   private registry = new Registry();
 
-  constructor(public readonly id = 'global') {
+  constructor(public readonly id: string) {
   }
 
-  static of(data: IEntry[] = [], id?: string): Provider {
+  static of(data: IEntry[] = [], id = guid()): Provider {
     const provider = new Provider(id);
     provider.register(...data);
     return provider;
@@ -72,7 +73,7 @@ export class Provider {
 
 }
 
-const globalProvider = new Provider();
+const rootProvider = new Provider(ROOT_PROVIDER_ID);
 export {
-  globalProvider
+  rootProvider
 };

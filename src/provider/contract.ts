@@ -14,3 +14,11 @@ export interface IProviderGetOpt {
   primitiveCanBeResult?: boolean;
 
 }
+
+export interface IProviderMetadata {
+
+  providerId?: string;
+
+  isOnlyOne?: boolean;
+
+}
