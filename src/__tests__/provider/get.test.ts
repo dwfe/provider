@@ -49,13 +49,21 @@ describe('Provider.getAll', () => {
     expect(value.sound()).toBe('quack!');
   });
 
-  test('resolve', () => {
+  test('@injectable + @single', () => {
     const d = provider.getOnlyOne<D>(D);
     expect(d).toBeTruthy();
     expect(d.c instanceof C).toBe(true);
     expect(d.b instanceof B).toBe(true);
     expect(d.b.a instanceof A).toBe(true);
     expect(d.b.a.name).toBe(undefined);
+  });
+
+  test('@injectable isOnlyOne', () => {
+
+  });
+
+  test('@single really the only one', () => {
+
   });
 
 });
