@@ -17,8 +17,6 @@ export interface IProviderGetOpt {
 
 export interface IProviderMetadata {
 
-  providerId?: string;
-
   isOnlyOne?: boolean;
 
 }

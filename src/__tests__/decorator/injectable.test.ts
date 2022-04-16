@@ -1,7 +1,6 @@
 import {describe} from '@jest/globals'
 import 'reflect-metadata';
-import {IProviderMetadata, PROVIDER_METADATA_KEY, ROOT_PROVIDER_ID} from '../../provider'
-import {L10nService} from '../abc/l10n.service'
+import {IProviderMetadata, PROVIDER_METADATA_KEY} from '../../provider'
 import {injectable} from '../../decorator'
 import {User} from '../abc/user'
 
@@ -37,28 +36,17 @@ describe('Decorator.injectable', () => {
       }
     }
 
-    checkMetadata(A1, {providerId: ROOT_PROVIDER_ID}, []);
+    checkMetadata(A1, {}, []);
   });
 
-  test('change provider metadata + design:paramtypes', () => {
-    @injectable({providerId: 'platform', isOnlyOne: false})
+  test('set "isOnlyOne" + design:paramtypes', () => {
+    @injectable({isOnlyOne: true})
     class A2 {
       constructor(public name: string, private user: User) {
       }
     }
 
-    checkMetadata(A2, {providerId: 'platform', isOnlyOne: false}, [String, User]);
-  });
-
-
-  test('mandatory providerId + design:paramtypes', () => {
-    @injectable({isOnlyOne: true})
-    class A3 {
-      constructor(l10nService: L10nService) {
-      }
-    }
-
-    checkMetadata(A3, {providerId: ROOT_PROVIDER_ID, isOnlyOne: true}, [L10nService]);
+    checkMetadata(A2, {isOnlyOne: true}, [String, User]);
   });
 
 });

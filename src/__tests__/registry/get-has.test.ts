@@ -5,16 +5,20 @@ import {Entry, Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
 import {getEntry} from './set.test';
 import {User} from '../abc/user'
+import {toThrow} from '../util'
 
 describe('Registry.get .has', () => {
+
+  test('incorrect provide, null/undefined', () => {
+    const registry = new Registry();
+    toThrow(() => registry.get(undefined), 'Incorrect "provide"');
+    toThrow(() => registry.get(null), 'Incorrect "provide"');
+  });
 
   test('no entry', () => {
     const registry = new Registry();
     expect(registry.has(Duck)).toBe(false);
     expect(registry.get(Duck)).toBe(undefined);
-
-    expect(registry.has(null)).toBe(false);
-    expect(registry.get(null)).toBe(undefined);
 
     expect(registry.has(123)).toBe(false);
     expect(registry.get(123)).toBe(undefined);

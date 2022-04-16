@@ -7,10 +7,10 @@ export class Provider {
 
   private registry = new Registry();
 
-  constructor(public readonly id: string) {
+  constructor(public readonly id = guid()) {
   }
 
-  static of(data: IEntry[] = [], id = guid()): Provider {
+  static of(data: IEntry[] = [], id?: string): Provider {
     const provider = new Provider(id);
     provider.register(...data);
     return provider;
@@ -24,7 +24,7 @@ export class Provider {
   getOnlyOne<TValue = any>(provide: any, opt: IProviderGetOpt = {}): TValue {
     const value = this.getAll<TValue>(provide, opt);
     if (value === undefined || Array.isArray(value)) {
-      console.error('provide:', provide, 'The value is not the only one:', value);
+      console.error('provide:', provide, '. The value is not the only one:', value);
       throw new Error('The value is not the only one');
     }
     return value;
@@ -33,8 +33,13 @@ export class Provider {
   getAll<TValue = any>(provide: any, opt: IProviderGetOpt = {}): TValue | TValue[] | undefined {
     const entries = this.registry.get(provide, opt.deps);
     if (!entries) {
-      if (opt.primitiveCanBeResult && isPrimitive(provide))
-        return provide;
+      if (isPrimitive(provide)) {
+        if (opt.primitiveCanBeResult)
+          return provide;
+      }
+      // else {
+      //   this.resolve()
+      // }
       console.warn('provide:', provide, `Missing from the provider's registry`);
       return;
     }
@@ -71,9 +76,13 @@ export class Provider {
     }
   }
 
+  resolve(provide: any) {
+
+  }
+
 }
 
 const rootProvider = new Provider(ROOT_PROVIDER_ID);
 export {
-  rootProvider
+  rootProvider,
 };

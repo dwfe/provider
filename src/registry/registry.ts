@@ -20,6 +20,10 @@ export class Registry {
    * @return Non-empty array | undefined
    */
   get(provide: any, deps?: any[]): Entry[] | undefined {
+    if (provide == null) { // null, undefined
+      console.error('Incorrect "provide":', provide);
+      throw new Error('Incorrect "provide"');
+    }
     let entries = this.store.get(provide); // 1
     if (!entries || entries.length === 0)
       return;

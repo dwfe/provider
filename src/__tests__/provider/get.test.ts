@@ -4,13 +4,17 @@ import {getLang} from '../abc/get-lang'
 import {Provider} from '../../provider';
 import {User} from '../abc/user';
 
+//region Support
+
 const provider = Provider.of([
   {provide: User, deps: [L10nService, 'Naruto']},
   {provide: L10nService, deps: ['ja']},
   {provide: 'lang-factory', useFactory: getLang, deps: [User]},
 ]);
 
-describe('Provider.get', () => {
+//endregion Support
+
+describe('Provider.getAll', () => {
 
   test('primitive can be result', () => {
     const user = provider.getOnlyOne<User>(User);

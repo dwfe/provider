@@ -7,19 +7,19 @@ export class A {
 }
 
 @injectable()
-class B {
+export class B {
   constructor(public a: A) {
   }
 }
 
 @injectable()
-class C {
+export class C {
   constructor() {
   }
 }
 
 @injectable()
-class D {
+export class D {
   constructor(public b: B,
               public c: C) {
   }
