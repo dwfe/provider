@@ -56,6 +56,10 @@ describe('Provider.getAll', () => {
     expect(d.b instanceof B).toBe(true);
     expect(d.b.a instanceof A).toBe(true);
     expect(d.b.a.name).toBe(undefined);
+
+    // TODO еще раз запросить синглтон и проверить одиночность
+    //      проверить еще неодиночные инстансы
+
   });
 
   test('@injectable isOnlyOne', () => {
@@ -63,6 +67,10 @@ describe('Provider.getAll', () => {
   });
 
   test('@single really the only one', () => {
+
+  });
+
+  test(`multi 'Bird'`, () => {
 
   });
 
