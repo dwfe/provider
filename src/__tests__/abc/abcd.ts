@@ -1,12 +1,12 @@
-import {injectable} from '../../decorator'
+import {injectable, single} from '../../decorator'
 
 @injectable()
 export class A {
-  constructor(private name: string) {
+  constructor(public name: string) {
   }
 }
 
-@injectable()
+@single
 export class B {
   constructor(public a: A) {
   }

@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "reflect-metadata": "0.1.x",
-    "@do-while-for-each/common": "^1.2.8"
+    "@do-while-for-each/common": "^1.2.9"
   },
   "devDependencies": {
     "@do-while-for-each/tsconfig": "^1.0.3",

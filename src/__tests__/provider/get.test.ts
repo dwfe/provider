@@ -1,7 +1,9 @@
 import {describe, expect} from '@jest/globals';
+import 'reflect-metadata';
 import {L10nService} from '../abc/l10n.service';
 import {Duck, Turkey} from '../abc/bird'
 import {Provider} from '../../provider';
+import {A, B, C, D} from '../abc/abcd'
 import {getLang} from '../abc/getLang'
 import {User} from '../abc/user';
 
@@ -47,8 +49,13 @@ describe('Provider.getAll', () => {
     expect(value.sound()).toBe('quack!');
   });
 
-  // test('', () => {
-  //
-  // });
+  test('resolve', () => {
+    const d = provider.getOnlyOne<D>(D);
+    expect(d).toBeTruthy();
+    expect(d.c instanceof C).toBe(true);
+    expect(d.b instanceof B).toBe(true);
+    expect(d.b.a instanceof A).toBe(true);
+    expect(d.b.a.name).toBe(undefined);
+  });
 
 });
