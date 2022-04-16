@@ -1,6 +1,6 @@
 import {describe, expect} from '@jest/globals';
 import {L10nService} from '../abc/l10n.service';
-import {getLang} from '../abc/get-lang'
+import {getLang} from '../abc/getLang'
 import {Provider} from '../../provider';
 import {User} from '../abc/user';
 

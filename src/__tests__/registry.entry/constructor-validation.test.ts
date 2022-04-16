@@ -3,7 +3,7 @@ import {Entry, IEntry} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
 import {noThrow, toThrow} from '../util'
-import {getLang} from '../abc/get-lang';
+import {getLang} from '../abc/getLang';
 import {User} from '../abc/user'
 
 //region Support

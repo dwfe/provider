@@ -2,7 +2,7 @@ import {describe, expect} from '@jest/globals';
 import {L10nService} from '../abc/l10n.service';
 import {Entry, Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
-import {getLang} from '../abc/get-lang'
+import {getLang} from '../abc/getLang'
 import {User} from '../abc/user';
 
 //region Support

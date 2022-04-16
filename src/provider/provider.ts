@@ -32,17 +32,18 @@ export class Provider {
 
   getAll<TValue = any>(provide: any, opt: IProviderGetOpt = {}): TValue | TValue[] | undefined {
     const entries = this.registry.get(provide, opt.deps);
+
     if (!entries) {
       if (isPrimitive(provide)) {
         if (opt.primitiveCanBeResult)
           return provide;
+      } else {
+        this.resolve(provide, opt);
       }
-      // else {
-      //   this.resolve()
-      // }
       console.warn('provide:', provide, `Missing from the provider's registry`);
       return;
     }
+
     const result: TValue[] = [];
     for (const entry of entries) {
       if (entry.result === 'value')
@@ -76,7 +77,7 @@ export class Provider {
     }
   }
 
-  resolve(provide: any) {
+  private resolve(provide: any, opt: IProviderGetOpt = {}) {
 
   }
 

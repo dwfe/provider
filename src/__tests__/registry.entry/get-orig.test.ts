@@ -1,7 +1,7 @@
 import {describe, expect} from '@jest/globals';
 import {Entry, IEntry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
-import {getLang} from '../abc/get-lang';
+import {getLang} from '../abc/getLang';
 import {User} from '../abc/user';
 
 //region Support
