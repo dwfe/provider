@@ -25,34 +25,38 @@ export class Provider {
     if (this.registry.has(provide))
       return;
     const {designParamtypes, providerMetadata} = getMetadata(provide);
-    const ctorParams = providerMetadata.ctorParams || {};
-    const deps: any[] = [];
-    for (let index = 0; index < designParamtypes.length; index++) {
-      const injectedProvide = ctorParams[index];
-      const dep = injectedProvide ?? designParamtypes[index];
-      if (isPrimitive(dep)) {
-        deps.push(dep);
-        continue;
+    const ctorParamsMetadata = providerMetadata.ctorParams || {};
+    const deps: any[] = designParamtypes.map((dep, index) => {
+      const injected = ctorParamsMetadata[index];
+      dep = injected === undefined ? dep : injected;
+      if (
+        isPrimitive(dep) ||
+        /**
+         * E.g. with decorator use:
+         *   @injectable class A{constructor(public: name: string){}}
+         * dep for prop "name" will have the value: String.
+         * Bad idea to put it to the registry.
+         */
+        isPrimitiveTypeWrapper(dep)
+      ) {
+        return dep;
       }
       /**
        * E.g. with decorator use:
-       *   @injectable class A{constructor(public: name: string){}}
-       * dep for prop "name" will have the value: String.
-       * Bad idea to put it to the registry.
+       *   @injectable class A{constructor(public: name = 'Alex'){}}
+       * dep for prop "name" will have the value: Object.
        */
-      if (isPrimitiveTypeWrapper(dep)) {
-        deps.push(dep);
-        continue;
+      if (dep === Object) {
+        return undefined;
       }
       if (!this.registry.get(dep, getMetadata(dep).designParamtypes))
         this.registerByMetadata(dep);
-      deps.push(dep);
-    }
-    if (providerMetadata.isOnlyOne) {
+      return dep;
+    });
+    if (providerMetadata.isOnlyOne)
       this.register({provide, useValue: new provide(...this.valuesByDeps(deps))});
-    } else {
+    else
       this.register({provide, useClass: provide, deps});
-    }
   }
 
   getOnlyOne<TValue = any>(provide: any, deps?: any[]): TValue {
@@ -108,7 +112,7 @@ export class Provider {
   }
 
   private valuesByDeps(deps: any[]): any[] {
-    return deps.map(x => {
+    return deps.map(dep => {
       /**
        * E.g. with manual registration:
        *   {provide: User, deps: ['John']}
@@ -119,15 +123,17 @@ export class Provider {
        * As a result, the instance will be created like this:
        *   new User('John')
        */
-      if (isPrimitive(x))
-        return x;
+      if (isPrimitive(dep))
+        return dep;
+
       /**
        * E.g. with decorator use:
        *   @injectable class A{constructor(public: name: string){}}
        */
-      else if (isPrimitiveTypeWrapper(x))
+      if (isPrimitiveTypeWrapper(dep))
         return undefined;
-      const value = this.getAll(x);
+
+      const value = this.getAll(dep);
       if (Array.isArray(value) && value.length === 1)
         return value[0];
       return value;
