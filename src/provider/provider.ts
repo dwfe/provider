@@ -26,7 +26,12 @@ export class Provider {
       return;
     const {designParamtypes, providerMetadata} = getMetadata(provide);
     const deps: any[] = [];
-    for (const dep of designParamtypes) {
+    for (let index = 0; index < designParamtypes.length; index++) {
+      const dep = designParamtypes[index];
+      const injectedProvide = (getCtorParamsMetadata(dep) || {})[index];
+      if (injectedProvide) {
+        console.log(`replacer`, injectedProvide);
+      }
       /**
        * E.g. with decorator use:
        *   @injectable class A{constructor(public: name: string){}}
@@ -102,11 +107,6 @@ export class Provider {
 
   private valuesByDeps(deps: any[]): any[] {
     return deps.map((x, index) => {
-      const ctorParams = getCtorParamsMetadata(x);
-      const injectParamProvide = (ctorParams || {})[index];
-      if (injectParamProvide) {
-        console.log(`replacer`, injectParamProvide);
-      }
       /**
        * E.g. with manual registration:
        *   {provide: User, deps: ['John']}
