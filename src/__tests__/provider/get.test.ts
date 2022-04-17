@@ -58,4 +58,15 @@ describe('Provider.get', () => {
     expect(duck !== duck2).toBe(true);
   });
 
+  test(`multi 'Bird'#2, one entry`, () => {
+    const provider = Provider.of([
+      {provide: 'Birds', useClass: Duck, multi: true},
+    ]);
+    provider.getAll('Birds');
+    const birds = provider.getAll('Birds') as Array<any>;
+    const duck = birds[0] as Duck;
+    expect(birds.length).toBe(1);
+    expect(duck instanceof Duck).toBe(true);
+  });
+
 });

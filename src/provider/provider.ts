@@ -29,27 +29,29 @@ export class Provider {
     const deps: any[] = designParamtypes.map((dep, index) => {
       const injected = ctorParamsMetadata[index];
       dep = injected === undefined ? dep : injected;
-      if (
-        isPrimitive(dep) ||
+      if (!this.registry.has(dep)) {
+        if (
+          isPrimitive(dep) ||
+          /**
+           * E.g. with decorator use:
+           *   @injectable class A{constructor(public: name: string){}}
+           * dep for prop "name" will have the value: String.
+           * Bad idea to put it to the registry.
+           */
+          isPrimitiveTypeWrapper(dep)
+        ) {
+          return dep;
+        }
         /**
          * E.g. with decorator use:
-         *   @injectable class A{constructor(public: name: string){}}
-         * dep for prop "name" will have the value: String.
-         * Bad idea to put it to the registry.
+         *   @injectable class A{constructor(public: name = 'Alex'){}}
+         * dep for prop "name" will have the value: Object.
          */
-        isPrimitiveTypeWrapper(dep)
-      ) {
-        return dep;
+        if (dep === Object) {
+          return undefined;
+        }
       }
-      /**
-       * E.g. with decorator use:
-       *   @injectable class A{constructor(public: name = 'Alex'){}}
-       * dep for prop "name" will have the value: Object.
-       */
-      if (dep === Object) {
-        return undefined;
-      }
-      if (!this.registry.get(dep, getMetadata(dep).designParamtypes))
+      if (!this.registry.get(dep, isPrimitive(dep) ? undefined : getMetadata(dep).designParamtypes))
         this.registerByMetadata(dep);
       return dep;
     });
@@ -101,6 +103,8 @@ export class Provider {
           throw new Error(`Unknown entry result "${entry.result}"`);
       }
     }
+    if (entries.some(x => x.multi))
+      return result;
     switch (result.length) {
       case 0:
         return;
@@ -113,26 +117,27 @@ export class Provider {
 
   private valuesByDeps(deps: any[]): any[] {
     return deps.map(dep => {
-      /**
-       * E.g. with manual registration:
-       *   {provide: User, deps: ['John']}
-       * when
-       *   {provide: 'John', ...}
-       * is not registered in the registry.
-       *
-       * As a result, the instance will be created like this:
-       *   new User('John')
-       */
-      if (isPrimitive(dep))
-        return dep;
+      if (!this.registry.has(dep)) {
+        /**
+         * E.g. with manual registration:
+         *   {provide: User, deps: ['John']}
+         * when
+         *   {provide: 'John', ...}
+         * is not registered in the registry.
+         *
+         * As a result, the instance will be created like this:
+         *   new User('John')
+         */
+        if (isPrimitive(dep))
+          return dep;
 
-      /**
-       * E.g. with decorator use:
-       *   @injectable class A{constructor(public: name: string){}}
-       */
-      if (isPrimitiveTypeWrapper(dep))
-        return undefined;
-
+        /**
+         * E.g. with decorator use:
+         *   @injectable class A{constructor(public: name: string){}}
+         */
+        if (isPrimitiveTypeWrapper(dep))
+          return undefined;
+      }
       const value = this.getAll(dep);
       if (Array.isArray(value) && value.length === 1)
         return value[0];

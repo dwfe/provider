@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import {inject, injectable, single} from '../../decorator'
 import {checkMetadata} from './injectable.test'
 import {Provider} from '../../provider'
+import {Duck, Turkey} from '../abc/bird'
 
 //region Support
 
@@ -63,8 +64,27 @@ describe('Decorator.inject', () => {
     expect(a2).toHaveProperty('type', undefined);
   });
 
-  test('inject multi', () => {
-    //todo
-  });
+  // test('inject multi', () => {
+  //   @injectable()
+  //   class A {
+  //     constructor(@inject('Birds') public birds = []) {
+  //     }
+  //   }
+  //
+  //   const provider = Provider.of([
+  //     {provide: Duck},
+  //     {provide: Turkey},
+  //     {provide: 'Birds', useClass: Duck, multi: true},
+  //     {provide: 'Birds', useClass: Turkey, multi: true},
+  //     {provide: 'Birds', useValue: 'Eagle', multi: true},
+  //   ]);
+  //
+  //   const a = provider.getOnlyOne<A>(A);
+  //   expect(a).toBeInstanceOf(A);
+  //   expect(a.birds.length).toBe(3);
+  //   expect(a[0]).toBeInstanceOf(Duck);
+  //   expect(a[1]).toBeInstanceOf(Turkey);
+  //   expect(a[2]).toBe('Eagle');
+  // });
 
 });
