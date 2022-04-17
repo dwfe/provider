@@ -2,8 +2,8 @@ import {describe} from '@jest/globals'
 import 'reflect-metadata';
 import {inject, injectable, single} from '../../decorator'
 import {checkMetadata} from './injectable.test'
-import {Provider} from '../../provider'
 import {Duck, Turkey} from '../abc/bird'
+import {Provider} from '../../provider'
 
 //region Support
 
