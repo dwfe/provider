@@ -1,6 +1,6 @@
 import {guid, isPrimitive, isPrimitiveTypeWrapper} from '@do-while-for-each/common';
 import {IEntry, Registry} from '../registry'
-import {getCtorParamsMetadata, getMetadata} from './getMetadata'
+import {getMetadata} from './getMetadata'
 import {ROOT_PROVIDER_ID} from './index'
 
 export class Provider {
@@ -25,12 +25,14 @@ export class Provider {
     if (this.registry.has(provide))
       return;
     const {designParamtypes, providerMetadata} = getMetadata(provide);
+    const ctorParams = providerMetadata.ctorParams || {};
     const deps: any[] = [];
     for (let index = 0; index < designParamtypes.length; index++) {
-      const dep = designParamtypes[index];
-      const injectedProvide = (getCtorParamsMetadata(dep) || {})[index];
-      if (injectedProvide) {
-        console.log(`replacer`, injectedProvide);
+      const injectedProvide = ctorParams[index];
+      const dep = injectedProvide ?? designParamtypes[index];
+      if (isPrimitive(dep)) {
+        deps.push(dep);
+        continue;
       }
       /**
        * E.g. with decorator use:
@@ -106,7 +108,7 @@ export class Provider {
   }
 
   private valuesByDeps(deps: any[]): any[] {
-    return deps.map((x, index) => {
+    return deps.map(x => {
       /**
        * E.g. with manual registration:
        *   {provide: User, deps: ['John']}
