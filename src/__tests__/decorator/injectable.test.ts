@@ -1,3 +1,4 @@
+import {isEqual} from '@do-while-for-each/common'
 import {describe} from '@jest/globals'
 import 'reflect-metadata';
 import {getMetadata} from '../../provider/getMetadata'
@@ -9,14 +10,8 @@ import {User} from '../abc/user'
 
 export function checkMetadata(target: object, testProvider: IProviderMetadata, testDesign: any[]) {
   const {designParamtypes, providerMetadata} = getMetadata(target);
-  expect(testDesign.length).toBe(designParamtypes.length);
-  for (let i = 0; i < testDesign.length; i++) {
-    expect(designParamtypes[i]).toBe(testDesign[i]);
-  }
-  expect(Object.keys(testProvider).length).toBe(Object.keys(providerMetadata).length);
-  for (const key of Object.keys(testProvider)) {
-    expect(providerMetadata).toHaveProperty(key, testProvider[key]);
-  }
+  expect(isEqual(testDesign, designParamtypes)).toBe(true);
+  expect(isEqual(testProvider, providerMetadata)).toBe(true);
 }
 
 @injectable()

@@ -5,11 +5,6 @@ import {checkMetadata} from './injectable.test'
 import {Duck, Turkey} from '../abc/bird'
 import {Provider} from '../../provider'
 
-//region Support
-
-
-//endregion Support
-
 describe('Decorator.inject', () => {
 
   test('@injectable', () => {
