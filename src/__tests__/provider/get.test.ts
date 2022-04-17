@@ -15,6 +15,9 @@ const provider = Provider.of([
   {provide: 'lang-factory', useFactory: getLang, deps: [User]},
   {provide: Turkey, useClass: Turkey},
   {provide: Duck, useValue: new Duck()},
+  {provide: 'Birds', useClass: Turkey, multi: true},
+  {provide: 'Birds', useClass: Duck, multi: true},
+  {provide: 'Birds', useValue: 'Eagle', multi: true},
 ]);
 
 //endregion Support
@@ -71,6 +74,11 @@ describe('Provider.getAll', () => {
   });
 
   test(`multi 'Bird'`, () => {
+    const birds = provider.getAll('Birds') as Array<any>;
+    expect(birds.length).toBe(3);
+    expect(birds[0] instanceof Turkey).toBe(true);
+    expect(birds[1] instanceof Duck).toBe(true);
+    expect(birds[2]).toBe('Eagle');
 
   });
 
