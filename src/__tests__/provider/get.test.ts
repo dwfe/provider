@@ -14,23 +14,14 @@ const provider = Provider.of([
   {provide: 'lang-factory', useFactory: getLang, deps: [User]},
   {provide: Turkey, useClass: Turkey},
   {provide: Duck, useValue: new Duck()},
-  {provide: 'Birds', useClass: Turkey, multi: true},
   {provide: 'Birds', useClass: Duck, multi: true},
+  {provide: 'Birds', useClass: Turkey, multi: true},
   {provide: 'Birds', useValue: 'Eagle', multi: true},
 ]);
 
 //endregion Support
 
-describe('Provider.getAll', () => {
-
-  test('primitive can be result', () => {
-    const value = provider.getOnlyOne<User>(User);
-    expect(value).toBeTruthy();
-    expect(value instanceof User).toBe(true);
-    expect(value.l10nService).not.toBe(undefined);
-    expect(value).toHaveProperty('lang', 'ja');
-    expect(value).toHaveProperty('name', 'Naruto');
-  });
+describe('Provider.get', () => {
 
   test('useClass', () => {
     const value = provider.getOnlyOne<Turkey>(Turkey);
@@ -52,11 +43,19 @@ describe('Provider.getAll', () => {
   });
 
   test(`multi 'Bird'`, () => {
+    provider.getAll('Birds');
     const birds = provider.getAll('Birds') as Array<any>;
+    const duck = birds[0] as Duck;
+    const turkey = birds[1] as Turkey
     expect(birds.length).toBe(3);
-    expect(birds[0] instanceof Turkey).toBe(true);
-    expect(birds[1] instanceof Duck).toBe(true);
+    expect(duck instanceof Duck).toBe(true);
+    expect(turkey instanceof Turkey).toBe(true);
     expect(birds[2]).toBe('Eagle');
+
+    provider.getOnlyOne<Duck>(Duck);
+    const duck2 = provider.getOnlyOne<Duck>(Duck);
+    expect(duck2 instanceof Duck).toBe(true);
+    expect(duck !== duck2).toBe(true);
   });
 
 });

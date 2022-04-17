@@ -1,5 +1,6 @@
 import {describe, expect} from '@jest/globals'
 import 'reflect-metadata';
+import {injectable, single} from '../../decorator'
 import {L10nService} from '../abc/l10n.service'
 import {Duck, Turkey} from '../abc/bird'
 import {Provider} from '../../provider'
@@ -46,11 +47,27 @@ describe('Decorators: @injectable, @single', () => {
   });
 
   test('@injectable isOnlyOne', () => {
+    @injectable({isOnlyOne: true})
+    class InjectableSingle {
+    }
 
+    const obj = provider.getOnlyOne<InjectableSingle>(InjectableSingle);
+    const obj2 = provider.getOnlyOne<InjectableSingle>(InjectableSingle);
+    expect(obj instanceof InjectableSingle).toBe(true);
+    expect(obj2 instanceof InjectableSingle).toBe(true);
+    expect(obj === obj2).toBe(true);
   });
 
   test('@single really the only one', () => {
+    @single
+    class Single {
+    }
 
+    const obj = provider.getOnlyOne<Single>(Single);
+    const obj2 = provider.getOnlyOne<Single>(Single);
+    expect(obj instanceof Single).toBe(true);
+    expect(obj2 instanceof Single).toBe(true);
+    expect(obj === obj2).toBe(true);
   });
 
   test('inject prop', () => {
