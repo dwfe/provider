@@ -72,8 +72,10 @@ export class Provider {
     const result: TValue[] = [];
     for (const entry of entries) {
 
-      if (entry.result === 'value')
-        return entry.useValue;
+      if (entry.result === 'value') {
+        result.push(entry.useValue);
+        continue;
+      }
 
       const deps = entry.deps || [];
       const valuesByDeps = deps.length ? this.valuesByDeps(deps) : [];

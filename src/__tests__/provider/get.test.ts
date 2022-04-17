@@ -5,6 +5,7 @@ import {Duck, Turkey} from '../abc/bird'
 import {Provider} from '../../provider';
 import {A, B, C, D} from '../abc/abcd'
 import {getLang} from '../abc/getLang'
+import {Entry} from '../../registry'
 import {User} from '../abc/user';
 
 //region Support
@@ -52,17 +53,32 @@ describe('Provider.getAll', () => {
     expect(value.sound()).toBe('quack!');
   });
 
+  test(`multi 'Bird'`, () => {
+    const birds = provider.getAll('Birds') as Array<any>;
+    expect(birds.length).toBe(3);
+    expect(birds[0] instanceof Turkey).toBe(true);
+    expect(birds[1] instanceof Duck).toBe(true);
+    expect(birds[2]).toBe('Eagle');
+  });
+
   test('@injectable + @single', () => {
-    const d = provider.getOnlyOne<D>(D);
+    let d = provider.getOnlyOne<D>(D);
     expect(d).toBeTruthy();
     expect(d.c instanceof C).toBe(true);
     expect(d.b instanceof B).toBe(true);
     expect(d.b.a instanceof A).toBe(true);
     expect(d.b.a.name).toBe(undefined);
 
-    // TODO еще раз запросить синглтон и проверить одиночность
-    //      проверить еще неодиночные инстансы
-
+    // еще раз запросить синглтон и проверить одиночность
+    d = provider.getAll<any>(D);
+    let b = provider.getOnlyOne<B>(B);
+    expect(b instanceof B).toBe(true);
+    b = provider.getAll<B>(B) as B;
+    expect(b instanceof B).toBe(true);
+    const bEntry = provider['registry'].get(B) as Entry[];
+    expect(Array.isArray(bEntry)).toBe(true);
+    expect(bEntry.length).toBe(1);
+    expect(bEntry[0].useValue instanceof B).toBe(true);
   });
 
   test('@injectable isOnlyOne', () => {
@@ -73,12 +89,7 @@ describe('Provider.getAll', () => {
 
   });
 
-  test(`multi 'Bird'`, () => {
-    const birds = provider.getAll('Birds') as Array<any>;
-    expect(birds.length).toBe(3);
-    expect(birds[0] instanceof Turkey).toBe(true);
-    expect(birds[1] instanceof Duck).toBe(true);
-    expect(birds[2]).toBe('Eagle');
+  test('inject prop', () => {
 
   });
 
