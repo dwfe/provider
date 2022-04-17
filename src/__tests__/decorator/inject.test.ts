@@ -64,27 +64,27 @@ describe('Decorator.inject', () => {
     expect(a2).toHaveProperty('type', undefined);
   });
 
-  // test('inject multi', () => {
-  //   @injectable()
-  //   class A {
-  //     constructor(@inject('Birds') public birds = []) {
-  //     }
-  //   }
-  //
-  //   const provider = Provider.of([
-  //     {provide: Duck},
-  //     {provide: Turkey},
-  //     {provide: 'Birds', useClass: Duck, multi: true},
-  //     {provide: 'Birds', useClass: Turkey, multi: true},
-  //     {provide: 'Birds', useValue: 'Eagle', multi: true},
-  //   ]);
-  //
-  //   const a = provider.getOnlyOne<A>(A);
-  //   expect(a).toBeInstanceOf(A);
-  //   expect(a.birds.length).toBe(3);
-  //   expect(a[0]).toBeInstanceOf(Duck);
-  //   expect(a[1]).toBeInstanceOf(Turkey);
-  //   expect(a[2]).toBe('Eagle');
-  // });
+  test('inject multi', () => {
+    @injectable()
+    class A {
+      constructor(@inject('Birds') public birds = []) {
+      }
+    }
+
+    const provider = Provider.of([
+      {provide: Duck},
+      {provide: Turkey},
+      {provide: 'Birds', useClass: Duck, multi: true},
+      {provide: 'Birds', useClass: Turkey, multi: true},
+      {provide: 'Birds', useValue: 'Eagle', multi: true},
+    ]);
+
+    const a = provider.getOnlyOne<A>(A);
+    expect(a).toBeInstanceOf(A);
+    expect(a.birds.length).toBe(3);
+    expect(a.birds[0]).toBeInstanceOf(Duck);
+    expect(a.birds[1]).toBeInstanceOf(Turkey);
+    expect(a.birds[2]).toBe('Eagle');
+  });
 
 });

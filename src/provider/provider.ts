@@ -139,8 +139,12 @@ export class Provider {
           return undefined;
       }
       const value = this.getAll(dep);
-      if (Array.isArray(value) && value.length === 1)
-        return value[0];
+      if (Array.isArray(value)) {
+        if (this.registry.get(dep)?.some(x => x.multi))
+          return value;
+        if (value.length === 1)
+          return value[0];
+      }
       return value;
     });
   }
