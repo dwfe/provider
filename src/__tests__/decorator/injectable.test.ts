@@ -19,27 +19,27 @@ export function checkMetadata(target: object, testProvider: IProviderMetadata, t
   }
 }
 
+@injectable()
+class A1 {
+  constructor() {
+  }
+}
+
+@injectable({isOnlyOne: true})
+class A2 {
+  constructor(public name: string, private user: User) {
+  }
+}
+
 //endregion Support
 
 describe('Decorator.injectable', () => {
 
   test('predefined provider metadata + design:paramtypes', () => {
-    @injectable()
-    class A1 {
-      constructor() {
-      }
-    }
-
     checkMetadata(A1, {}, []);
   });
 
   test('set "isOnlyOne" + design:paramtypes', () => {
-    @injectable({isOnlyOne: true})
-    class A2 {
-      constructor(public name: string, private user: User) {
-      }
-    }
-
     checkMetadata(A2, {isOnlyOne: true}, [String, User]);
   });
 

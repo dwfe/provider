@@ -23,4 +23,8 @@ describe('Decorator', () => {
     checkMetadata(A2, {isOnlyOne: true}, [String, User]);
   });
 
+  test('', () => {
+
+  });
+
 });
