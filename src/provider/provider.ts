@@ -1,6 +1,6 @@
 import {guid, isPrimitive, isPrimitiveTypeWrapper} from '@do-while-for-each/common';
 import {IEntry, Registry} from '../registry'
-import {getMetadata} from './getMetadata'
+import {getCtorParamsMetadata, getMetadata} from './getMetadata'
 import {ROOT_PROVIDER_ID} from './index'
 
 export class Provider {
@@ -101,7 +101,12 @@ export class Provider {
   }
 
   private valuesByDeps(deps: any[]): any[] {
-    return deps.map(x => {
+    return deps.map((x, index) => {
+      const ctorParams = getCtorParamsMetadata(x);
+      const injectParamProvide = (ctorParams || {})[index];
+      if (injectParamProvide) {
+        console.log(`replacer`, injectParamProvide);
+      }
       /**
        * E.g. with manual registration:
        *   {provide: User, deps: ['John']}
