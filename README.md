@@ -1,3 +1,91 @@
+# Registration of entries
+
+Before getting a value from a provider, you need to register entries in it.  
+The resulting value directly depends on the type of registered entry:
+
+```
+Entry result types:
+
+ 1. Value creator:
+     class-instance = { provide, useClass?, deps?, multi? }
+     factory-result = { provide, useFactory?, deps?, multi? }
+
+ 2. Ready value:
+    { provide, useValue, multi? }
+```
+
+## Manual registration
+
+You can use the default provider:
+
+```typescript
+import {provider} from '@do-while-for-each/provider';
+
+provider.register(
+  {provide: Turkey, useClass: Turkey},
+  {provide: Duck, useValue: new Duck()},
+);
+```
+
+or create a new one:
+
+```typescript
+import {Provider} from '@do-while-for-each/provider';
+
+const provider = Provider.of([
+  {provide: Turkey, useClass: Turkey},
+  {provide: Duck, useValue: new Duck()},
+]);
+
+// or
+
+const provider = new Provider('my-provider#1');
+provider.register(
+  {provide: Turkey, useClass: Turkey},
+  {provide: Duck, useValue: new Duck()},
+);
+```
+
+## Automatic registration
+
+Automatic registration is divided into 2 stages.
+
+### Place decorators
+
+The first step is to place the appropriate decorators in the appropriate places of the class:
+
+```typescript
+import {inject, injectable, single} from '@do-while-for-each/provider';
+
+@injectable()
+class A1 {
+  constructor() {
+  }
+}
+
+@single
+class A2 {
+  constructor(public id = 90,
+              public a1: A1,
+              @inject('Alex') public name = 'Naruto',
+              public type: boolean) {
+  }
+}
+```
+
+Possible decorators:
+
+1. `@injectable()` - placed above the class. When requested from the provider, it will create a new instance every time. Accepts the setting: `@injectable({isOnlyOne: true})` - when requested from the provider, it will return the same instance;
+2. `@single` - this is a short analog of `@injectable({isOnlyOne: true})`;
+3. `@inject(provide)` - is set at the constructor parameter of the class. Can set or override the parameter value.
+
+### Request a value from the provider
+
+It is at the moment of requesting a value that automatic registration of records is performed. It is done once on the first request.  
+Registration is made in the provider from which the request is made.
+
+# Getting values from the provider
+
 ## Normal use examples
 
 ### Class instance provided
