@@ -1,7 +1,7 @@
 # Registration of entries
 
 Before getting a value from a provider, you need to register entries in it.  
-The resulting value directly depends on the type of registered entry:
+The requested value directly depends on the type of registered entry:
 
 ```
 Entry result types:
