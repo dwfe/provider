@@ -8,7 +8,7 @@ Entry result types:
 
  1. Value creator:
      class-instance = { provide, useClass?, deps?, multi? }
-     factory-result = { provide, useFactory?, deps?, multi? }
+     factory-result = { provide, useFactory, deps?, multi? }
 
  2. Ready value:
     { provide, useValue, multi? }
@@ -23,7 +23,7 @@ import {provider} from '@do-while-for-each/provider';
 
 provider.register(
   {provide: Turkey, useClass: Turkey},
-  {provide: Duck, useValue: new Duck()},
+  {provide: Duck, useValue: 123},
 );
 ```
 
@@ -33,26 +33,40 @@ or create a new one:
 import {Provider} from '@do-while-for-each/provider';
 
 const provider = Provider.of([
-  {provide: Turkey, useClass: Turkey},
+  {provide: Turkey},
   {provide: Duck, useValue: new Duck()},
 ]);
 
 // or
 
-const provider = new Provider('my-provider#1');
+const provider = new Provider('custom-provider#1');
 provider.register(
-  {provide: Turkey, useClass: Turkey},
-  {provide: Duck, useValue: new Duck()},
+  {provide: Duck, useClass: Turkey},
+  {provide: 'Birds', useValue: new Duck(), multi: true},
 );
 ```
 
 ## Automatic registration
 
-Automatic registration is divided into 2 stages.
+Automatic registration of entries in the provider is possible under the following conditions:
+
+1. TypeScript is required;
+2. You need to enable settings in tsconfig.json: [experimentalDecorators](https://www.typescriptlang.org/tsconfig#experimentalDecorators) and [emitDecoratorMetadata](https://www.typescriptlang.org/tsconfig#emitDecoratorMetadata);
+3. In the index file of your project, you need to import:
+
+```typescript
+import "reflect-metadata";
+```
+
+4. Place the appropriate decorators in the appropriate places of the class.
 
 ### Place decorators
 
-The first step is to place the appropriate decorators in the appropriate places of the class:
+Possible decorators:
+
+1. `@injectable()` - placed above the class. When value requested from the provider, it will create a new instance every time. Accepts the setting: `@injectable({isOnlyOne: true})` - when value requested from the provider, it will return the same instance;
+2. `@single` - this is a short analog of `@injectable({isOnlyOne: true})`;
+3. `@inject(provide)` - can set or override the constructor parameter of the class.
 
 ```typescript
 import {inject, injectable, single} from '@do-while-for-each/provider';
@@ -73,22 +87,23 @@ class A2 {
 }
 ```
 
-Possible decorators:
-
-1. `@injectable()` - placed above the class. When requested from the provider, it will create a new instance every time. Accepts the setting: `@injectable({isOnlyOne: true})` - when requested from the provider, it will return the same instance;
-2. `@single` - this is a short analog of `@injectable({isOnlyOne: true})`;
-3. `@inject(provide)` - is set at the constructor parameter of the class. Can set or override the parameter value.
-
-### Request a value from the provider
-
-It is at the moment of getting a value that automatic registration of entries is performed. It is done once on the first getting.  
-Registration is made in the provider from which the getting is made.
-
 # Getting values from the provider
 
-## Normal use examples
+If you are sure that the provider should give a single value, then:
 
-### Class instance provided
+```typescript
+const duck = provider.getOnlyOne<Duck>(Duck);
+```
+
+Otherwise, it is better to use:
+
+```typescript
+const birds = provider.getAll('Birds') as Array<any>;
+```
+
+# Normal use examples
+
+## Class instance provided
 
 ```
 {provide: Duck}
@@ -97,20 +112,20 @@ Registration is made in the provider from which the getting is made.
 {provide: Turkey, useClass: Duck, deps: ['ololo!']}
 ```
 
-### Factory result provided
+## Factory result provided
 
 ```
 {provide: "lang", useFactory: (user: User) => user?.lang || 'en', deps: [User]}
 ```
 
-### Value provided
+## Value provided
 
 ```
 {provide: Duck, useValue: 123}
 {provide: Turkey, useClass: Turkey, deps: ['ololo!'], useValue: 123}
 ```
 
-### Multiple provided
+## Multiple provided
 
 ```
 {provide: "Bird", useClass: Duck, multi: true}
@@ -118,35 +133,29 @@ Registration is made in the provider from which the getting is made.
 {provide: "Bird", useValue: 'Eagle', multi: true}
 ```
 
-## Single value/instance
+## Single value
 
-Registration:
+To manually register a single value, you must use the entry `{ provide, useValue, multi? }`, e.g.:
 
-```
-const provider = new Provider();
-provider.reg(
-  {provide: User, useValue: 123, multi: true},
-  {provide: User, deps: ['Tom'], useValue: 77, multi: true},
-  {provide: User, deps: ['Tom', L10nService], useValue: 42, multi: true},
-  {provide: User, deps: ['Tom', L10nService], useValue: 98, multi: true},
-);
+```typescript
+provider.register({provide: Duck, useValue: new Duck()});
 ```
 
-Now the registry contains the following entry:
+Or use a `@single` decorator, e.g.:
 
-```
-User -> [
-          {provide: User, useValue: 123, multi: true},
-          {provide: User, deps: ['ru'], useValue: 77, multi: true},
-          {provide: User, deps: [L10nService], useValue: 42, multi: true},
-        ]
-```
-
-Getting a single value/instance:
-
-```
-provider.get(User) -> 123
-provider.get(User) -> 123
+```typescript
+@single  // or @injectable({isOnlyOne: true})
+class Duck {
+  constructor(public sound = 'quack!') {
+  }
+}
 ```
 
+In both cases, you will always get the same value from the provider:
+
+```typescript
+const obj = provider.getOnlyOne<Duck>(Duck);
+const obj2 = provider.getOnlyOne<Duck>(Duck);
+expect(obj === obj2).toBe(true);
+```
 
