@@ -81,8 +81,8 @@ Possible decorators:
 
 ### Request a value from the provider
 
-It is at the moment of requesting a value that automatic registration of records is performed. It is done once on the first request.  
-Registration is made in the provider from which the request is made.
+It is at the moment of getting a value that automatic registration of entries is performed. It is done once on the first getting.  
+Registration is made in the provider from which the getting is made.
 
 # Getting values from the provider
 
