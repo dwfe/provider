@@ -14,27 +14,47 @@ export function checkMetadata(target: object, testProvider: IProviderMetadata, t
   expect(isEqual(testProvider, providerMetadata)).toBe(true);
 }
 
-@injectable()
-class A1 {
-  constructor() {
-  }
-}
-
-@injectable({isOnlyOne: true})
-class A2 {
-  constructor(public name: string, private user: User) {
-  }
-}
-
 //endregion Support
 
 describe('Decorator.injectable', () => {
 
+  test('has metadata', () => {
+    @injectable()
+    class A {
+    }
+
+    const {hasDesignParamtypes, hasProviderMetadata} = getMetadata(A);
+    expect(hasDesignParamtypes).toBe(false);
+    expect(hasProviderMetadata).toBe(true);
+  });
+
+  test('has metadata #2', () => {
+    @injectable()
+    class A {
+      constructor(public name: string) {
+      }
+    }
+
+    const {hasDesignParamtypes, hasProviderMetadata} = getMetadata(A);
+    expect(hasDesignParamtypes).toBe(true);
+    expect(hasProviderMetadata).toBe(true);
+  });
+
   test('predefined provider metadata + design:paramtypes', () => {
+    @injectable()
+    class A1 {
+    }
+
     checkMetadata(A1, {}, []);
   });
 
   test('set "isOnlyOne" + design:paramtypes', () => {
+    @injectable({isOnlyOne: true})
+    class A2 {
+      constructor(public name: string, private user: User) {
+      }
+    }
+
     checkMetadata(A2, {isOnlyOne: true}, [String, User]);
   });
 

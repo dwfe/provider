@@ -21,19 +21,28 @@ export class Provider {
       this.registry.set(entry);
   }
 
-  private registerByMetadata(provide: any): void {
+  private registerByMetadata(provide: any): boolean {
     if (this.registry.has(provide))
-      return;
-    const {designParamtypes, providerMetadata} = getMetadata(provide);
+      return true;
+    const {hasDesignParamtypes, designParamtypes, hasProviderMetadata, providerMetadata} = getMetadata(provide);
+    if (!hasDesignParamtypes && !hasProviderMetadata)
+      return false;
     const ctorParamsMetadata = providerMetadata.ctorParams || {};
-    const deps: any[] = designParamtypes.map((dep, index) => {
+    const deps = designParamtypes.map((dep, index) => {
       const injected = ctorParamsMetadata[index];
-      dep = injected === undefined ? dep : injected;
+      dep = injected === undefined ? dep : injected; // replace dep with the injected value
       if (!this.registry.has(dep)) {
         if (
-          isPrimitive(dep) ||
           /**
-           * E.g. with decorator use:
+           * E.g. when the replacement occurred:
+           *   @injectable class A{constructor(@inject('Birds') public: user: User){}}
+           * dep for prop "name" will have the value: String.
+           * Bad idea to put it to the registry.
+           */
+          isPrimitive(dep) ||
+
+          /**
+           * E.g.:
            *   @injectable class A{constructor(public: name: string){}}
            * dep for prop "name" will have the value: String.
            * Bad idea to put it to the registry.
@@ -43,7 +52,8 @@ export class Provider {
           return dep;
         }
         /**
-         * E.g. with decorator use:
+         * The default value of any type is converted to dep as Object.
+         * E.g.:
          *   @injectable class A{constructor(public: name = 'Alex'){}}
          * dep for prop "name" will have the value: Object.
          */
@@ -51,14 +61,20 @@ export class Provider {
           return undefined;
         }
       }
-      if (!this.registry.get(dep, isPrimitive(dep) ? undefined : getMetadata(dep).designParamtypes))
-        this.registerByMetadata(dep);
+      if (!this.registry.get(dep, isPrimitive(dep) ? undefined : getMetadata(dep).designParamtypes)) {
+        const isRegistered = this.registerByMetadata(dep);
+        if (!isRegistered) {
+          console.error('provide:', dep, `. Missing from the provider's registry. The "provide" must be registered either manually or using decorators.`);
+          throw new Error('Unregistered "provide" [dep]');
+        }
+      }
       return dep;
     });
     if (providerMetadata.isOnlyOne)
       this.register({provide, useValue: new provide(...this.valuesByDeps(deps))});
     else
       this.register({provide, useClass: provide, deps});
+    return true;
   }
 
   getOnlyOne<TValue = any>(provide: any, deps?: any[]): TValue {
@@ -74,12 +90,16 @@ export class Provider {
     const entries = this.registry.get(provide, deps);
 
     if (!entries) {
-      if (!isPrimitive(provide)) {
-        this.registerByMetadata(provide);
-        return this.getAll(provide, deps);
+      if (isPrimitive(provide)) {
+        console.error('provide:', provide, `. Missing from the provider's registry. The "provide" must be registered either manually or using decorators.`);
+        throw new Error('Unregistered "provide" [primitive type]');
+      } else {
+        const isRegistered = this.registerByMetadata(provide);
+        if (isRegistered)
+          return this.getAll(provide, deps);
+        console.error('provide:', provide, `. Missing from the provider's registry. The "provide" must be registered either manually or using decorators.`);
+        throw new Error('Unregistered "provide" [non-primitive type]');
       }
-      console.warn('provide:', provide, `Missing from the provider's registry`);
-      return;
     }
 
     const result: TValue[] = [];
@@ -100,19 +120,12 @@ export class Provider {
           result.push((entry.useFactory as Function)(...valuesByDeps) as TValue);
           break;
         default:
-          throw new Error(`Unknown entry result "${entry.result}"`);
+          throw new Error(`Unknown entry result type "${entry.result}"`);
       }
     }
-    if (entries.some(x => x.multi))
-      return result;
-    switch (result.length) {
-      case 0:
-        return;
-      case 1:
-        return result[0];
-      default:
-        return result;
-    }
+    if (result.length === 1 && !entries[0].multi)
+      return result[0];
+    return result;
   }
 
   private valuesByDeps(deps: any[]): any[] {
@@ -134,6 +147,7 @@ export class Provider {
         /**
          * E.g. with decorator use:
          *   @injectable class A{constructor(public: name: string){}}
+         * Don't know what to inject.
          */
         if (isPrimitiveTypeWrapper(dep))
           return undefined;

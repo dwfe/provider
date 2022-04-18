@@ -6,8 +6,15 @@ export interface IProviderMetadata {
 }
 
 export interface IAllMetadata {
-  designType: any;
-  designParamtypes: any[];
-  designReturntype: any;
+  hasDesignType: boolean;
+  designType: any;         // "design:type", by TypeScript
+
+  hasDesignParamtypes: boolean;
+  designParamtypes: any[]; // "design:paramtypes", by TypeScript
+
+  hasDesignReturntype: boolean;
+  designReturntype: any;   // "design:returntype", by TypeScript
+
+  hasProviderMetadata: boolean;
   providerMetadata: IProviderMetadata;
 }
