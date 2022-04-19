@@ -8,7 +8,7 @@ import {IEntry} from './contract'
  *
  *  1. Value creator:
  *      class-instance = { provide, useClass?, deps?, multi? }
- *      factory-result = { provide, useFactory?, deps?, multi? }
+ *      factory-result = { provide, useFactory, deps?, multi? }
  *
  *  2. Ready value:
  *     { provide, useValue, multi? }
