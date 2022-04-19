@@ -60,9 +60,7 @@ import "reflect-metadata";
 
 4. Place the appropriate decorators in the appropriate places of the class.
 
-### Place decorators
-
-Possible decorators:
+### Decorators
 
 1. `@injectable()` - placed above the class. When value requested from the provider, it will create a new instance every time. Accepts the setting: `@injectable({isOnlyOne: true})` - when value requested from the provider, it will return the same instance;
 2. `@single` - this is a short analog of `@injectable({isOnlyOne: true})`;
