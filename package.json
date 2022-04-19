@@ -1,7 +1,7 @@
 {
   "name": "@do-while-for-each/provider",
   "description": "Value provider and not only",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/cjs/index.js",
   "types": "dist/types/index.d.ts",
   "homepage": "https://github.com/dwfe/provider",
