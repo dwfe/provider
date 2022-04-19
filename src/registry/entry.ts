@@ -44,19 +44,19 @@ export class Entry implements IEntry {
     this.provide = provide;
 
     if (useValue === undefined) {
-      if (!!useClass && !!useFactory) {
+      if (useClass && useFactory) {
         console.error('At the same time, you can set either "useClass" or "useFactory":', data);
         throw new Error('Only one: "useClass" or "useFactory"');
       }
       if (useFactory) {
-        if (typeof useFactory !== 'function') {
+        if (!isFunction(useFactory)) {
           console.error('"useFactory" must be a function:', data);
           throw new Error('Incorrect "useFactory"');
         }
         this.useFactory = useFactory;
         this.result = 'factory-result';
       } else {
-        if (!!useClass && typeof useClass !== 'function') {
+        if (useClass && !isFunction(useClass)) {
           console.error('Incorrect "useClass":', data);
           throw new Error('Incorrect "useClass"');
         }
@@ -71,12 +71,12 @@ export class Entry implements IEntry {
         this.result = 'class-instance';
       }
 
-      if (deps === null || !!deps && !Array.isArray(deps)) {
+      if (deps === null || deps && !Array.isArray(deps)) {
         console.error('Incorrect "deps":', data);
         throw new Error('Incorrect "deps"');
       }
       this.deps = deps;
-      if (!!deps && deps.length === 0)
+      if (deps && deps.length === 0)
         this.deps = undefined;
     } else {
       this.useValue = useValue;
