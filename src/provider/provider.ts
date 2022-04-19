@@ -36,7 +36,7 @@ export class Provider {
           /**
            * E.g. when the replacement occurred:
            *   @injectable class A{constructor(@inject('Birds') public: user: User){}}
-           * dep for prop "name" will have the value: String.
+           * dep for prop "user" will have the value: 'Birds'.
            * Bad idea to put it to the registry.
            */
           isPrimitive(dep) ||
