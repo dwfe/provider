@@ -77,11 +77,11 @@ export class Provider {
     return true;
   }
 
-  getOnlyOne<TValue = any>(provide: any, deps?: any[]): TValue {
+  get<TValue = any>(provide: any, deps?: any[]): TValue {
     const value = this.getAll<TValue>(provide, deps);
     if (value === undefined || Array.isArray(value)) {
-      console.error('provide:', provide, '. The value is not the only one:', value);
-      throw new Error('The value is not the only one');
+      console.error('provide:', provide, '. The value is not the only one (instead, use "getAll" method):', value);
+      throw new Error('The value is not the only one. Instead, use "getAll" method');
     }
     return value;
   }

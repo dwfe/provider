@@ -27,7 +27,7 @@ const provider = Provider.of([
 describe('Decorators: @injectable, @single', () => {
 
   test('@injectable + @single', () => {
-    let d = provider.getOnlyOne<D>(D);
+    let d = provider.get<D>(D);
     expect(d).toBeTruthy();
     expect(d.c instanceof C).toBe(true);
     expect(d.b instanceof B).toBe(true);
@@ -36,7 +36,7 @@ describe('Decorators: @injectable, @single', () => {
 
     // еще раз запросить синглтон и проверить одиночность
     d = provider.getAll<any>(D);
-    let b = provider.getOnlyOne<B>(B);
+    let b = provider.get<B>(B);
     expect(b instanceof B).toBe(true);
     b = provider.getAll<B>(B) as B;
     expect(b instanceof B).toBe(true);
@@ -51,8 +51,8 @@ describe('Decorators: @injectable, @single', () => {
     class InjectableSingle {
     }
 
-    const obj = provider.getOnlyOne<InjectableSingle>(InjectableSingle);
-    const obj2 = provider.getOnlyOne<InjectableSingle>(InjectableSingle);
+    const obj = provider.get<InjectableSingle>(InjectableSingle);
+    const obj2 = provider.get<InjectableSingle>(InjectableSingle);
     expect(obj instanceof InjectableSingle).toBe(true);
     expect(obj2 instanceof InjectableSingle).toBe(true);
     expect(obj === obj2).toBe(true);
@@ -63,8 +63,8 @@ describe('Decorators: @injectable, @single', () => {
     class Single {
     }
 
-    const obj = provider.getOnlyOne<Single>(Single);
-    const obj2 = provider.getOnlyOne<Single>(Single);
+    const obj = provider.get<Single>(Single);
+    const obj2 = provider.get<Single>(Single);
     expect(obj instanceof Single).toBe(true);
     expect(obj2 instanceof Single).toBe(true);
     expect(obj === obj2).toBe(true);

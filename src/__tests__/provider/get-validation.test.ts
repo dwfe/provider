@@ -7,13 +7,13 @@ import {injectable} from '../../decorator';
 
 describe('Provider.get', () => {
 
-  test('getOnlyOne. incorrect provide', () => {
+  test('get. incorrect provide', () => {
     const provider = Provider.of([
       {provide: 'Birds', useValue: 'Duck', multi: true},
       {provide: 'Birds', useValue: 'Turkey', multi: true},
       {provide: 'Birds', useValue: 'Eagle', multi: true},
     ]);
-    toThrow(() => provider.getOnlyOne('Birds'), 'The value is not the only one');
+    toThrow(() => provider.get('Birds'), 'The value is not the only one. Instead, use "getAll" method');
   });
 
 

@@ -24,19 +24,19 @@ const provider = Provider.of([
 describe('Provider.get', () => {
 
   test('useClass', () => {
-    const value = provider.getOnlyOne<Turkey>(Turkey);
+    const value = provider.get<Turkey>(Turkey);
     expect(value).toBeTruthy();
     expect(value instanceof Turkey).toBe(true);
     expect(value.sound()).toBe('ololo!');
   });
 
   test('useFactory', () => {
-    const factoryResult = provider.getOnlyOne<string>('lang-factory');
+    const factoryResult = provider.get<string>('lang-factory');
     expect(factoryResult).toBe('ja');
   });
 
   test('useValue', () => {
-    const value = provider.getOnlyOne<Duck>(Duck);
+    const value = provider.get<Duck>(Duck);
     expect(value).toBeTruthy();
     expect(value instanceof Duck).toBe(true);
     expect(value.sound()).toBe('quack!');
@@ -52,8 +52,8 @@ describe('Provider.get', () => {
     expect(turkey instanceof Turkey).toBe(true);
     expect(birds[2]).toBe('Eagle');
 
-    provider.getOnlyOne<Duck>(Duck);
-    const duck2 = provider.getOnlyOne<Duck>(Duck);
+    provider.get<Duck>(Duck);
+    const duck2 = provider.get<Duck>(Duck);
     expect(duck2 instanceof Duck).toBe(true);
     expect(duck !== duck2).toBe(true);
   });

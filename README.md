@@ -1,3 +1,17 @@
+# Installation
+
+Install by npm:
+
+```shell
+npm install --save @do-while-for-each/provider
+```
+
+or install with yarn:
+
+```shell
+yarn add @do-while-for-each/provider
+```
+
 # Registration of entries
 
 Before getting a value from a provider, you need to register entries in it.  
@@ -22,7 +36,7 @@ You can use the default provider:
 import {provider} from '@do-while-for-each/provider';
 
 provider.register(
-  {provide: Turkey, useClass: Turkey},
+  {provide: Turkey},
   {provide: Duck, useValue: 123},
 );
 ```
@@ -33,7 +47,7 @@ or create a new one:
 import {Provider} from '@do-while-for-each/provider';
 
 const provider = Provider.of([
-  {provide: Turkey},
+  {provide: Turkey, useClass: Turkey},
   {provide: Duck, useValue: new Duck()},
 ]);
 
@@ -57,6 +71,8 @@ Automatic registration of entries in the provider is possible under the followin
 ```typescript
 import "reflect-metadata";
 ```
+
+You don't need to install the package `reflect-metadata`, it's already in dependencies.
 
 4. Place the appropriate decorators in the appropriate places of the class.
 
@@ -87,10 +103,10 @@ class A2 {
 
 # Getting values from the provider
 
-If you are sure that the provider should give a single value, then:
+If you are sure that the provider should return one existing value, then:
 
 ```typescript
-const duck = provider.getOnlyOne<Duck>(Duck);
+const duck = provider.get<Duck>(Duck);
 ```
 
 Otherwise, it is better to use:
@@ -133,7 +149,7 @@ const birds = provider.getAll('Birds') as Array<any>;
 
 ## Single value
 
-To manually register a single value, you must use the entry `{ provide, useValue, multi? }`, e.g.:
+You should use the entry `{ provide, useValue, multi? }` to manually register a single value, e.g.:
 
 ```typescript
 provider.register({provide: Duck, useValue: new Duck()});
@@ -152,8 +168,8 @@ class Duck {
 In both cases, you will always get the same value from the provider:
 
 ```typescript
-const obj = provider.getOnlyOne<Duck>(Duck);
-const obj2 = provider.getOnlyOne<Duck>(Duck);
+const obj = provider.get<Duck>(Duck);
+const obj2 = provider.get<Duck>(Duck);
 expect(obj === obj2).toBe(true);
 ```
 

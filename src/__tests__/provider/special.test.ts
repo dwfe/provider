@@ -23,7 +23,7 @@ const provider = Provider.of([
 describe('Some special cases', () => {
 
   test('primitive can be result', () => {
-    const value = provider.getOnlyOne<User>(User);
+    const value = provider.get<User>(User);
     expect(value).toBeTruthy();
     expect(value instanceof User).toBe(true);
     expect(value.l10nService).not.toBe(undefined);
@@ -37,10 +37,10 @@ describe('Some special cases', () => {
 
     provider.register({provide: Some, useValue: new Some()});
 
-    const obj = provider.getOnlyOne<Some>(Some);
+    const obj = provider.get<Some>(Some);
     expect(obj instanceof Some).toBe(true);
     provider.register({provide: Some, useValue: new Some()});
-    const obj2 = provider.getOnlyOne<Some>(Some);
+    const obj2 = provider.get<Some>(Some);
     expect(obj !== obj2).toBe(true);
   });
 

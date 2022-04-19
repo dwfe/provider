@@ -25,7 +25,7 @@ describe('Decorator.inject', () => {
 
     checkMetadata(A1, {}, []);
     checkMetadata(A2, {ctorParams: {[2]: 'hello'}}, [Object, A1, Object, Boolean]);
-    const a2 = Provider.of().getOnlyOne<A2>(A2);
+    const a2 = Provider.of().get<A2>(A2);
     expect(a2).toBeInstanceOf(A2);
     expect(a2).toHaveProperty('name', 'hello');
     expect(a2.a1).toBeInstanceOf(A1);
@@ -51,7 +51,7 @@ describe('Decorator.inject', () => {
 
     checkMetadata(A1, {isOnlyOne: true}, []);
     checkMetadata(A2, {isOnlyOne: true, ctorParams: {[2]: 'hello'}}, [Object, A1, Object, Boolean]);
-    const a2 = Provider.of().getOnlyOne<A2>(A2);
+    const a2 = Provider.of().get<A2>(A2);
     expect(a2).toBeInstanceOf(A2);
     expect(a2).toHaveProperty('name', 'hello');
     expect(a2.a1).toBeInstanceOf(A1);
@@ -74,7 +74,7 @@ describe('Decorator.inject', () => {
       {provide: 'Birds', useValue: 'Eagle', multi: true},
     ]);
 
-    const a = provider.getOnlyOne<A>(A);
+    const a = provider.get<A>(A);
     expect(a).toBeInstanceOf(A);
     expect(a.birds.length).toBe(3);
     expect(a.birds[0]).toBeInstanceOf(Duck);
