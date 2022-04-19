@@ -40,6 +40,10 @@ describe('Entry.constructor, incorrect use', () => {
     toThrow(create({provide: Duck, useClass: 123}), 'Incorrect "useClass"');
   });
 
+  test('incorrect provide, must be a function', () => {
+    toThrow(create({provide: {say: 'hi'}}), 'Incorrect "provide". Must be a function')
+  });
+
   test('incorrect deps', () => {
     toThrow(create({provide: Duck, deps: null}), 'Incorrect "deps"');
     toThrow(create({provide: Duck, deps: 123}), 'Incorrect "deps"');

@@ -61,8 +61,13 @@ export class Entry implements IEntry {
           throw new Error('Incorrect "useClass"');
         }
         this.useClass = useClass;
-        if (!this.useClass && isFunction(this.provide))
+        if (!this.useClass) {
+          if (!isFunction(this.provide)) {
+            console.error('Incorrect "provide". Must be a function:', data);
+            throw new Error('Incorrect "provide". Must be a function');
+          }
           this.useClass = this.provide as unknown as Type<any>;
+        }
         this.result = 'class-instance';
       }
 
