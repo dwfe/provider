@@ -36,8 +36,8 @@ You can use the default provider:
 import {provider} from '@do-while-for-each/provider';
 
 provider.register(
-  {provide: Turkey},
-  {provide: Duck, useValue: 123},
+  {provide: Duck},
+  {provide: Turkey, useValue: 123},
 );
 ```
 
@@ -47,8 +47,8 @@ or create a new one:
 import {Provider} from '@do-while-for-each/provider';
 
 const provider = Provider.of([
-  {provide: Turkey, useClass: Turkey},
   {provide: Duck, useValue: new Duck()},
+  {provide: Turkey, useClass: Turkey},
 ]);
 
 // or
