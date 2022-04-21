@@ -5,14 +5,14 @@ import {Entry, Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
 import {getEntry} from './set.test';
 import {User} from '../abc/user'
-import {toThrow} from '../util'
+import {Throw} from '../util'
 
 describe('Registry.get .has', () => {
 
   test('incorrect provide, null/undefined', () => {
     const registry = new Registry();
-    toThrow(() => registry.get(undefined), 'Incorrect "provide"');
-    toThrow(() => registry.get(null), 'Incorrect "provide"');
+    Throw(() => registry.get(undefined), 'Incorrect "provide"');
+    Throw(() => registry.get(null), 'Incorrect "provide"');
   });
 
   test('no entry', () => {

@@ -1,7 +1,7 @@
 import {describe} from '@jest/globals'
 import 'reflect-metadata';
 import {Provider} from '../../provider'
-import {toThrow} from '../util'
+import {Throw} from '../util'
 import {Duck, Turkey} from '../abc/bird';
 import {injectable} from '../../decorator';
 
@@ -13,12 +13,12 @@ describe('Provider.get', () => {
       {provide: 'Birds', useValue: 'Turkey', multi: true},
       {provide: 'Birds', useValue: 'Eagle', multi: true},
     ]);
-    toThrow(() => provider.get('Birds'), 'The value is not the only one. Instead, use "getAll" method');
+    Throw(() => provider.get('Birds'), 'The value is not the only one. Instead, use "getAll" method');
   });
 
 
   test('getAll. unregistered provide [primitive type]', () => {
-    toThrow(() => Provider.of([]).getAll('Hello'), 'Unregistered "provide" [primitive type]');
+    Throw(() => Provider.of([]).getAll('Hello'), 'Unregistered "provide" [primitive type]');
   });
 
 
@@ -26,7 +26,7 @@ describe('Provider.get', () => {
     class Hello {
     }
 
-    toThrow(() => Provider.of([]).getAll(Hello), 'Unregistered "provide" [non-primitive type]');
+    Throw(() => Provider.of([]).getAll(Hello), 'Unregistered "provide" [non-primitive type]');
   });
 
 
@@ -41,7 +41,7 @@ describe('Provider.get', () => {
       }
     }
 
-    toThrow(() => Provider.of([]).getAll(Hello), 'Unregistered "provide" [dep]');
+    Throw(() => Provider.of([]).getAll(Hello), 'Unregistered "provide" [dep]');
   });
 
 });
