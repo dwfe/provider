@@ -2,8 +2,14 @@
   "name": "@do-while-for-each/provider",
   "description": "Value provider and not only",
   "version": "1.0.2",
-  "main": "dist/cjs/index.js",
-  "types": "dist/types/index.d.ts",
+  "exports": "./dist/cjs/index.js",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/types/*"
+      ]
+    }
+  },
   "homepage": "https://github.com/dwfe/provider",
   "bugs": "https://github.com/dwfe/provider/issues",
   "repository": {
@@ -23,8 +29,7 @@
     "README.md"
   ],
   "scripts": {
-    "manual": "node manual.js",
-    "clean": "dwfeFs cleanDir . --noConfirm --fileNames=\"dist;node_modules;package-lock.json\"",
+    "clean": "dwfeFs cleanDir . --fileNames=\"dist;node_modules;package-lock.json\"",
     "build": "dwfeFs rmForce dist --noConfirm && tsc -b src/tsconfig.json",
     "types": "tsc -b config/tsconfig.types.json",
     "test": "jest --config=src/__tests__/jest.config.js",
@@ -33,8 +38,8 @@
     "deploy": "npm version patch && npm publish"
   },
   "dependencies": {
-    "reflect-metadata": "0.1.x",
-    "@do-while-for-each/common": "^1.2.9"
+    "@do-while-for-each/common": "^1.2.14",
+    "reflect-metadata": "0.1.x"
   },
   "devDependencies": {
     "@do-while-for-each/tsconfig": "^1.0.3",
