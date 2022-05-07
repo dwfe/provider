@@ -1,8 +1,8 @@
+import {noThrow, Throw} from '@do-while-for-each/test'
 import {describe} from '@jest/globals';
 import {Entry, IEntry} from '../../registry'
 import {IEntryTest} from '../abc/contract'
 import {Duck, Turkey} from '../abc/bird'
-import {noThrow, Throw} from '../util'
 import {getLang} from '../abc/getLang';
 import {User} from '../abc/user'
 

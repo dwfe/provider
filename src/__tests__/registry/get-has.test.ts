@@ -1,11 +1,11 @@
 import {describe, expect} from '@jest/globals';
+import {Throw} from '@do-while-for-each/test'
 import {checkCloned} from '../registry.entry/clone.test';
 import {L10nService} from '../abc/l10n.service'
 import {Entry, Registry} from '../../registry';
 import {Duck, Turkey} from '../abc/bird';
 import {getEntry} from './set.test';
 import {User} from '../abc/user'
-import {Throw} from '../util'
 
 describe('Registry.get .has', () => {
 

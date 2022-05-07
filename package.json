@@ -43,9 +43,7 @@
   },
   "devDependencies": {
     "@do-while-for-each/tsconfig": "^1.0.3",
-    "@types/jest": "27.x.x",
-    "jest": "27.x.x",
-    "ts-jest": "27.x.x"
+    "@do-while-for-each/test": "^1.0.1"
   },
   "publishConfig": {
     "access": "public"

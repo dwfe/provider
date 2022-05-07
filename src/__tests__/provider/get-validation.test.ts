@@ -1,9 +1,9 @@
+import {Throw} from '@do-while-for-each/test'
 import {describe} from '@jest/globals'
 import 'reflect-metadata';
-import {Provider} from '../../provider'
-import {Throw} from '../util'
-import {Duck, Turkey} from '../abc/bird';
 import {injectable} from '../../decorator';
+import {Duck, Turkey} from '../abc/bird';
+import {Provider} from '../../provider'
 
 describe('Provider.get', () => {
 
