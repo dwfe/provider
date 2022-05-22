@@ -28,6 +28,14 @@
     "LICENSE",
     "README.md"
   ],
+  "dependencies": {
+    "@do-while-for-each/common": "1.x.x",
+    "reflect-metadata": "0.1.x"
+  },
+  "devDependencies": {
+    "@do-while-for-each/tsconfig": "1.x.x",
+    "@do-while-for-each/test": "1.x.x"
+  },
   "scripts": {
     "clean": "dwfeFs cleanDir . --fileNames=\"dist;node_modules;package-lock.json\"",
     "build": "dwfeFs rmForce dist --noConfirm && tsc -b src/tsconfig.json",
@@ -36,14 +44,6 @@
     "version": "npm run build && npm run types && npm run test",
     "postversion": "git push",
     "deploy": "npm version patch && npm publish"
-  },
-  "dependencies": {
-    "@do-while-for-each/common": "^1.2.14",
-    "reflect-metadata": "0.1.x"
-  },
-  "devDependencies": {
-    "@do-while-for-each/tsconfig": "^1.0.3",
-    "@do-while-for-each/test": "^1.0.1"
   },
   "publishConfig": {
     "access": "public"
