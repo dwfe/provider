@@ -149,7 +149,7 @@ const birds = provider.getAll('Birds') as Array<any>;
 
 ## Single value
 
-You should use the entry `{ provide, useValue, multi? }` to manually register a single value, e.g.:
+You should use the entry `{ provide, useValue }` to manually register a single value, e.g.:
 
 ```typescript
 provider.register({provide: Duck, useValue: new Duck()});
