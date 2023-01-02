@@ -1,8 +1,8 @@
-import {Type} from '@do-while-for-each/common'
+import {IClassConstructor} from '@do-while-for-each/common'
 
 export interface IEntry {
   provide: any;
-  useClass?: Type<any>;
+  useClass?: IClassConstructor<any>;
   useFactory?: Function;
   useValue?: any;
   deps?: any[];

@@ -1,8 +1,8 @@
-import {TAnyObject} from '@do-while-for-each/common'
+import {IAnyObject} from '@do-while-for-each/common'
 
 export interface IProviderMetadata {
   isOnlyOne?: boolean;
-  ctorParams?: TAnyObject;
+  ctorParams?: IAnyObject;
 }
 
 export interface IAllMetadata {

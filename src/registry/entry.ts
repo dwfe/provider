@@ -1,4 +1,4 @@
-import {isPrimitive, Type} from '@do-while-for-each/common'
+import {isPrimitive, IClassConstructor} from '@do-while-for-each/common'
 import {arraysEqualFailCheck, isFunction} from '../util'
 import {IEntry} from './contract'
 
@@ -17,7 +17,7 @@ import {IEntry} from './contract'
 export class Entry implements IEntry {
 
   readonly provide: any;  // any except [null, undefined]
-  readonly useClass?: Type<any>;  // constructor
+  readonly useClass?: IClassConstructor<any>;  // constructor
   readonly useFactory?: Function; // function
   readonly useValue?: any; // any except [undefined]
   readonly deps?: any[]; // non-empty any[]
@@ -66,7 +66,7 @@ export class Entry implements IEntry {
             console.error('Incorrect "provide". Must be a function:', data);
             throw new Error('Incorrect "provide". Must be a function');
           }
-          this.useClass = this.provide as unknown as Type<any>;
+          this.useClass = this.provide as unknown as IClassConstructor<any>;
         }
         this.result = 'class-instance';
       }

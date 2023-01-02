@@ -29,7 +29,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@do-while-for-each/common": "1.x.x",
+    "@do-while-for-each/common": "2.x.x",
     "reflect-metadata": "0.1.x"
   },
   "devDependencies": {
@@ -42,8 +42,8 @@
     "types": "tsc -b config/tsconfig.types.json",
     "test": "jest --config=src/__tests__/jest.config.js",
     "version": "npm run build && npm run types && npm run test",
-    "postversion": "git push",
-    "deploy": "npm version patch && npm publish"
+    "deploy": "npm version patch && npm publish",
+    "tgz": "npm run build && npm pack"
   },
   "publishConfig": {
     "access": "public"
